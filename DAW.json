@@ -1,0 +1,22 @@
+{
+    "tasks": [
+      
+      {
+         "name": "align",
+         "toolname": "STAR",
+         "operation": "align",
+         "inputs": [["samples", "reads"], ["references.ref_gtf", "file"], ["references.ref_genome", "file"]],
+         "outputs": ["sam"],
+         "parameters":["--threads 2"]
+      },
+       {
+          "name": "sort_convert",
+          "toolname": "SAMTOOLS",
+          "operation": "postprocess",
+          "inputs": [["align.out.sam", "channel"]],
+          "outputs": ["bam"],
+          "parameters":["--threads 2"]
+       }
+ 
+    ]
+ }

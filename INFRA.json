@@ -1,0 +1,16 @@
+{"nodes": [
+
+    {
+       "name": "node01",
+       "RAM": "5G",
+       "state": "available"
+    },
+
+    {
+       "name": "node02",
+       "RAM": "5G",
+       "state": "available"
+    }
+
+ ]
+}
