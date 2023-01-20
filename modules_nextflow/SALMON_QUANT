@@ -1,0 +1,27 @@
+process SALMON_ALIGN_QUANT {
+    label 'salmon'
+    publishDir params.outdir
+
+    input:
+    env STRANDNESS
+    tuple val(sample_name), path(reads)
+    path(index)
+    path(annotation)
+
+    output:
+    path("transcripts_quant"), emit: quantification
+
+    shell:
+    '''
+     if [[ ($STRANDNESS == "firststrand") ]]; then 
+ 	salmon quant -i !{index} -l ISR -1 !{reads[0]} -2 !{reads[1]} --validateMappings -o transcripts_quant
+     elif [[ ($STRANDNESS == "secondstrand") ]]; then 
+         salmon quant -i !{index} -l ISF -1 !{reads[0]} -2 !{reads[1]} --validateMappings -o transcripts_quant
+ 	elif [[ $STRANDNESS == "unstranded" ]]; then
+ 		salmon quant -i !{index} -l IU -1 !{reads[0]} -2 !{reads[1]} --validateMappings -o transcripts_quant
+ 	else  
+ 		echo $STRANDNESS > error_strandness.txt
+ 		echo "strandness cannot be determined" >> error_strandness.txt
+ 	fi
+   '''
+}
