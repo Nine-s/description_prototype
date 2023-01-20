@@ -1,90 +1,91 @@
+import os
+import csv
 
-class input:  
+class Input:  
 
-    _number_of_samples:int = 1
-    _samples:list = []
+    number_of_samples:int = 1
+    samples:list = []
+    references:dict = {}
 
-    @property
-    def name(self):
-        return type(self)._name
-    @name.setter
-    def name(self, value):
-        type(self)._name = str(value)
+    def __init__(self, input_description):
+        # get samples
+        samples_list= []
+        nb_samples_tmp = 0
+        for i in range(len(input_description["samples"])):
+            nb_samples_tmp += 1
+            json_sample = input_description["samples"][i]
+            new_sample = Sample(json_sample)
+            samples_list.append(new_sample)
+        self.samples = samples_list
+        self.create_input_csv()
+        self.number_of_samples = nb_samples_tmp
 
-    @property
-    def ram(self):
-        return type(self)._ram
-    @ram.setter
-    def ram(self, value):
-        type(self)._ram = list(value)
+        #get references
+        references_dict= {}
+        for i in range(len(input_description["references"])):
+            json_ref = input_description["references"][i]
+            new_ref = Reference(json_ref)
+            references_dict[new_ref.ref_type] = new_ref
+        self.references = references_dict
+        print(references_dict)
 
+    def create_input_csv(self):
+        # TODO: Create csv file with inputs here?
+        with open('input.csv', 'w') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',',
+                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow(['Sample', 'path_r1', 'path_r2', 'strand'])
+            for sample in self.samples:
+                    filewriter.writerow([sample.name, sample.path_r1, sample.path_r2, sample.strand])
+            
 
-    def __init__(self,name,ram): 
-            self.name:str = name
-            self.ram:int = ram
+class Sample: 
 
-    def func(self):
-            print("After calling func() method..")
-            print("My dog's name is", self.name)
-            print("His color is", self.color)
+    name:str = "sample"
+    type:str = "reads"
+    path_r1:str = ""
+    path_r2:str = ""
+    paired:bool = True
+    strand:str = "forward"
+    size:float = 1
 
-class samples:  
+    def get_strand(self, strand):
+        strand_possibilities = ["forward", "reverse", "unstranded"]
+        if (strand in strand_possibilities):
+            return strand
+        else:
+            raise Exception("strand provided invalid or missing")
 
-    _size:float = 1
-    _strandedness:str = "forward"
-    _paired:bool = True
+    def __init__(self, sample_description): 
+        self.path_r1 = sample_description["path_r1"]
+        if (sample_description["path_r2"] != ""):
+            self.paired = True
+            self.path_r2 = sample_description["path_r2"]
+        else:
+            self.paired = False
+        self.name:str = sample_description["name"]
+        self.size = os.path.getsize(self.path_r1)
+        #todo: include size2
+        self.strand = self.get_strand(sample_description["strand"])
+        self.type = sample_description["type"]
 
-    @property
-    def name(self):
-        return type(self)._name
-    @name.setter
-    def name(self, value):
-        type(self)._name = str(value)
+class Reference:  
 
-    @property
-    def ram(self):
-        return type(self)._ram
-    @ram.setter
-    def ram(self, value):
-        type(self)._ram = list(value)
+    name:str = ""
+    path:str = ""
+    ref_type:str = ""
+    size = 1
 
-
-    def __init__(self,name,ram): 
-            self.name:str = name
-            self.ram:int = ram
-
-    def func(self):
-            print("After calling func() method..")
-            print("My dog's name is", self.name)
-            print("His color is", self.color)
-
-
-class references:  
-
-    _name:bool = True
-    _ram:int = 1
-
-    @property
-    def name(self):
-        return type(self)._name
-    @name.setter
-    def name(self, value):
-        type(self)._name = str(value)
-
-    @property
-    def ram(self):
-        return type(self)._ram
-    @ram.setter
-    def ram(self, value):
-        type(self)._ram = list(value)
-
-
-    def __init__(self,name,ram): 
-            self.name:str = name
-            self.ram:int = ram
-
-    def func(self):
-            print("After calling func() method..")
-            print("My dog's name is", self.name)
-            print("His color is", self.color)
-
+    def __init__(self, description): 
+        self.name:str = description["name"]
+        self.path:int = description["path"]
+        self.ref_type:str = self.get_ref_type(description["type"])
+        self.size = os.path.getsize(self.path)
+    
+    def get_ref_type(self, ref_type):
+        ref_type_possibilities = ["genome", "cdna", "gtf"] 
+        # TODO: add VCF (SNP/SNV db), and others
+        if (ref_type in ref_type_possibilities):
+            return ref_type
+        else:
+            raise Exception("ref type invalid or missing") 

@@ -1,5 +1,5 @@
 #class is defined using class keyword
-class infra:  
+class Infra:  
 
     _is_cluster:bool = True
     _number_nodes:int = 1
