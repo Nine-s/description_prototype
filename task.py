@@ -7,18 +7,28 @@ class Task:
     outputs:list = []
     parameters:list = []
     require_input_from:list = [] 
+    module_name:str = ""
+    module_path:str = ""
 
-    def __init__(self, name, tool, inputs, outputs, parameters, operation):#, require_input_from): 
+    def find_module_path(self):
+        #TODO
+        # read library file and infer module_name and module_path
+        # using the DAW description json
+        return
+
+    def __init__(self, name, tool, inputs, outputs, parameters, operation, module_name, module_path):#, require_input_from): 
         self.name:str = name
         self.tool:int = tool
         self.inputs:list = inputs
         self.outputs:list = outputs
         self.parameters:list = parameters
         self.operation:str = operation
+        self.module_name:str = module_name
+        self.module_path:str = module_path
         require_input_from_list = []
         for input in inputs:
-            if (input[1]=="channel"):
-                require_input_from_list.append(input[0])
+            if (".out_channel." in input):
+                require_input_from_list.append(input)
         self.require_input_from:list = require_input_from_list #build_task_dependencies(require_input_from)
 
     def my_print(self):

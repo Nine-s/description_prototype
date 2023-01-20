@@ -3,6 +3,8 @@ import json
 import infra
 import input
 from DAW import DAW
+from workflow_generation import workflow
+from to_nextflow import to_nextflow
 
 with open('/home/ninon/description_prototype/v1/DAW.json') as jsonfile:
     daw_description = json.load(jsonfile)
@@ -21,6 +23,8 @@ with open('/home/ninon/description_prototype/v1/INFRA.json') as jsonfile:
 
 # define object for DAW + task + connection
 my_DAW = DAW(daw_description, input_description, infra_description)
+to_nextflow(my_DAW)
+#my_DAW
 
 # # define library of tasks Nextflow(->nfcore) / CWL find repos
 # my_nextflow_DAW = DAW.to_nextflow()
