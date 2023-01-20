@@ -3,11 +3,11 @@
 
       {
          "name": "sample01",
+         "type": "reads",
          "path_r1": "/home/ninon/description_prototype/data/test_r1.fastq",
          "path_r2": "/home/ninon/description_prototype/data/test_r2.fastq",
          "strand": "forward"
       }
-
    ],
    "references": [
     {
@@ -18,7 +18,7 @@
 
     {
        "name": "ref_genome",
-       "path": "/home/ninon/description_prototype/data/genome.fasta",
+       "path": "/home/ninon/description_prototype/data/ref.fasta",
        "type": "genome"
     }
 

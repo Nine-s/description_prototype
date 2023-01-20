@@ -5,18 +5,22 @@
          "name": "align",
          "toolname": "STAR",
          "operation": "align",
-         "inputs": [["samples", "reads"], ["references.ref_gtf", "file"], ["references.ref_genome", "file"]],
+         "inputs": ["sample01", "ref_gtf", "ref_genome"],
          "outputs": ["sam"],
-         "parameters":["--threads 2"]
+         "parameters": ["--threads 2"],
+         "module_name": "STAR_align",
+         "module_path": "/home/ninon/modules/STAR.nf"
       },
        {
           "name": "sort_convert",
           "toolname": "SAMTOOLS",
           "operation": "postprocess",
-          "inputs": [["align.out.sam", "channel"]],
+          "inputs": ["align.out_channel.sam"],
           "outputs": ["bam"],
-          "parameters":["--threads 2"]
-       }
+          "parameters": ["--threads 2"],
+          "module_name": "SAMTOOLS_SORT_CONVERT",
+          "module_path": "/home/ninon/modules/samtools.nf"
+      }
  
-    ]
- }
+   ]
+}
