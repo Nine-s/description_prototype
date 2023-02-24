@@ -13,13 +13,13 @@
     {
        "name": "ref_gtf",
        "path": "/home/ninon/description_prototype/data/ref.gtf",
-       "type": "gtf"
+       "reference_type": "gtf"
     },
 
     {
        "name": "ref_genome",
        "path": "/home/ninon/description_prototype/data/ref.fasta",
-       "type": "genome"
+       "reference_type": "genome"
     }
 
  ]

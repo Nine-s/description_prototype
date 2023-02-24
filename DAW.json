@@ -5,7 +5,7 @@
          "name": "align",
          "toolname": "STAR",
          "operation": "align",
-         "inputs": ["sample01", "ref_gtf", "ref_genome"],
+         "inputs": ["reads", "ref_gtf", "ref_genome"],
          "outputs": ["sam"],
          "parameters": ["--threads 2"],
          "module_name": "STAR_align",

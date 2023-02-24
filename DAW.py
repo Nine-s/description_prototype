@@ -9,23 +9,6 @@ class DAW:
     is_scatter_gather:bool = False
     input:Input = None
     infra:Infra = None
-    # _tasks:list = []
-    # _tasks_priority:list = []
-    # _is_scatter_gather:bool = False
-
-    # @property
-    # def tasks(self):
-    #     return type(self)._tasks
-    # @tasks.setter
-    # def tasks(self, value):
-    #     type(self)._tasks = list(value)
-
-    # @property
-    # def tasks_priority(self):
-    #     return type(self)._tasks_priority
-    # @tasks_priority.setter
-    # def tasks_priority(self, value):
-    #     type(self)._tasks_priority = list(value)
 
     @staticmethod
     def build_dict_from_dependencies(tasks_list):
@@ -80,17 +63,25 @@ class DAW:
     def define_tasks_priority(self):
         tasks_dict = self.build_dict_from_dependencies(self.tasks)
         ordered_tasks_list = self.build_DAG_from_dict(tasks_dict)
-        return ordered_tasks_list
+        tasks_priority = []
+        for mtask in self.tasks:
+            task_name = mtask.name
+            #print(task_name)
+            index = ordered_tasks_list.index(task_name)
+            tasks_priority.append(index)
+        return tasks_priority
 
     # Creates a DAW object from the json description 
     def __init__    (self, DAW_description, input_description, infra_description):
         # create task objects
         self.infra = infra_description
-        self.input = Input(input_description)      
+        #self.input = Input(input_description)
         tasks_list = []
         for i in range(len(DAW_description["tasks"])):
             json_task = DAW_description["tasks"][i]
-            new_task = Task(json_task["name"], json_task["toolname"], json_task["inputs"], json_task["outputs"], json_task["parameters"], json_task["operation"], json_task["module_name"], json_task["module_path"])
+            new_task = Task(json_task["name"], json_task["toolname"], json_task["inputs"], json_task["outputs"], 
+                json_task["parameters"], json_task["operation"], json_task["module_name"], json_task["module_path"], 
+                input_description)
             tasks_list.append(new_task)
         self.tasks = tasks_list
         # define their priority

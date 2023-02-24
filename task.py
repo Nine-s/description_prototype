@@ -1,3 +1,5 @@
+from input import Input
+
 class Task:  
 
     name:str = "task_default"
@@ -10,23 +12,43 @@ class Task:
     module_name:str = ""
     module_path:str = ""
 
+
     def find_module_path(self):
         #TODO
         # read library file and infer module_name and module_path
         # using the DAW description json
         return
 
-    def __init__(self, name, tool, inputs, outputs, parameters, operation, module_name, module_path):#, require_input_from): 
+    def create_input(self, inputs_from_DAW, input_description):
+        list_inputs = []
+        for input in inputs_from_DAW:
+            # if ("out_channel" in input):
+            #     mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "")
+            #     list_inputs.append(mInput)
+            # else:
+            for sample in input_description["samples"]:
+                if (sample["name"] == input):
+                    mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "")
+                    list_inputs.append(mInput)
+            for reference in input_description["references"]:
+                if (reference["name"] == input):
+                    mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"])
+                    list_inputs.append(mInput)        
+        return list_inputs
+
+    def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
         self.name:str = name
         self.tool:int = tool
-        self.inputs:list = inputs
         self.outputs:list = outputs
         self.parameters:list = parameters
         self.operation:str = operation
         self.module_name:str = module_name
         self.module_path:str = module_path
+        inputs = self.create_input(inputs_from_DAW, input_description)
+        self.inputs = inputs
+        self.inputs_tasks:list = inputs_from_DAW
         require_input_from_list = []
-        for input in inputs:
+        for input in self.inputs_tasks:        
             if (".out_channel." in input):
                 require_input_from_list.append(input)
         self.require_input_from:list = require_input_from_list #build_task_dependencies(require_input_from)
