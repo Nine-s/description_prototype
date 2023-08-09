@@ -5,10 +5,10 @@
          "name": "align",
          "toolname": "STAR",
          "operation": "align",
-         "inputs": ["reads", "ref_gtf", "ref_genome"],
+         "inputs": ["sample01", "ref_gtf", "ref_genome"],
          "outputs": ["sam"],
          "parameters": ["--threads 2"],
-         "module_name": "STAR_align",
+         "module_name": "STAR_ALIGN",
          "module_path": "/home/ninon/modules/STAR.nf"
       },
        {

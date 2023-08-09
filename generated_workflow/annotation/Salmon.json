@@ -1,0 +1,20 @@
+{
+    "toolname": "Salmon",
+    "operation":"align",
+    "domain_specific_features": "quasi-mapping",
+    "is_splittable": "False",
+    "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
+    "other_inputs": ["lalala"],
+    "output_list": ["quant"],
+
+    "ressource_requirements_RAM": [
+        {
+            "reference_size": "120",
+            "RAM": "15GB"
+        },
+        {
+            "reference_size": "260",
+            "RAM": "30GB"
+        }
+    ]
+}

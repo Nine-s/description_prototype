@@ -14,7 +14,7 @@ process STAR_ALIGN {
 
     shell:
     '''
-    if [[ ($STRANDNESS == "firststrand") || ($STRANDNESS == "secondstrand") ]]; then
+    if [[ (params.strandness == "firststrand") || ($STRANDNESS == "secondstrand") ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\

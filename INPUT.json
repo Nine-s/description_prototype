@@ -4,21 +4,31 @@
       {
          "name": "sample01",
          "type": "reads",
-         "path_r1": "/home/ninon/description_prototype/data/test_r1.fastq",
-         "path_r2": "/home/ninon/description_prototype/data/test_r2.fastq",
-         "strand": "forward"
+         "path_r1": "/home/ninon/description_prototype/data/test_sam_cuff/Mmusculus_1.fq.gz",
+         "path_r2": "/home/ninon/description_prototype/data/test_sam_cuff/Mmusculus_1.fq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "23"
+      },
+      {
+         "name": "sample02",
+         "type": "reads",
+         "path_r1": "/home/ninon/description_prototype/data/test_sam_cuff/MmusculusP_1.fq.gz",
+         "path_r2": "/home/ninon/description_prototype/data/test_sam_cuff/MmusculusP_1.fq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "43"
       }
    ],
+
    "references": [
     {
        "name": "ref_gtf",
-       "path": "/home/ninon/description_prototype/data/ref.gtf",
-       "reference_type": "gtf"
+       "path": "/home/ninon/description_prototype/data/test_sam_cuff/",
+       "reference_type": "annotation"
     },
 
     {
        "name": "ref_genome",
-       "path": "/home/ninon/description_prototype/data/ref.fasta",
+       "path": "/home/ninon/description_prototype/data/test_sam_cuff/",
        "reference_type": "genome"
     }
 

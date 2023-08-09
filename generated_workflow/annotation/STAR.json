@@ -1,0 +1,20 @@
+{
+    "toolname": "STAR",
+    "operation":"align",
+    "domain_specific_features": "splice_junctions",
+    "is_splittable": "True",
+    "mendatory_input_list": ["reads", "ref_genome", "ref_TODO"],
+    "other_inputs": ["lalala"],
+    "output_list": "IS IT NECESSARY?",
+
+    "ressource_requirements_RAM": [
+        {
+            "reference_size": "120",
+            "RAM": "15GB"
+        },
+        {
+            "reference_size": "260",
+            "RAM": "30GB"
+        }
+    ]
+}

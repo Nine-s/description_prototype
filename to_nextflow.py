@@ -3,7 +3,7 @@ class to_nextflow:
     DAW = None
 
     def write_workflow(self):
-        start = """\n
+        start = """\nworkflow{
         read_pairs_ch = Channel
             .fromPath( 'params.input_csv' )
             .splitCsv(header: true, sep: '\t')
@@ -19,21 +19,18 @@ class to_nextflow:
         for i in range(len(tasks)):
             priority_index = self.DAW.tasks_priority.index(i)
             tmp_task = tasks[priority_index]
-            #print(tmp_task.my_print()) 
-            # add channel.out
-            #tmp = str(tmp_task.name) + "(" + str([str(e.name) for e in tmp_task.inputs]) + ")\n"
-            tmp = str(tmp_task.name) + "(" 
-            #TODO: in task.py/DAW.py: chech if upward task exists
-            for my_input in tmp_task.inputs_tasks:
+            tmp = str(tmp_task.module_name) + "(" 
+            #TODO: remove to justuse one input
+            for my_input in tmp_task.inputs_task:
                 if((".out" not in my_input) and (my_input != "reads")):
                     tmp += "params." + my_input + ", "
                 else: 
                     tmp += my_input + ", "
             tmp = tmp[:-2] + ")\n"
             core += tmp
-        #print(core)
         return core
     
+    # TODO: check if module path exists. Here?
     def generate_include_modules(self):
         include_string = ""
         include_dictionnary = {}
@@ -70,7 +67,7 @@ class to_nextflow:
                 _input = task_inputs[j]
                 if ("reference" in _input.input_type):
                     params_string += _input.ref_type + " = '" + _input.paths[0] + "'\n"  
-        with open('nextflow.config', 'a') as config_file:
+        with open('generated_workflow/nextflow.config', 'a') as config_file:
             config_file.write(base_config + params_string)
         #TODO: add threads #params_string += ("threads = " + str(self.DAW.infra.threads) + "\n") 
     
@@ -90,3 +87,6 @@ class to_nextflow:
             f.write("")
             f.write(header + workflow)
 
+
+    def write_docker_per_task(self):
+        return

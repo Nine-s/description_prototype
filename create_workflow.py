@@ -1,7 +1,8 @@
 import glob
 import json
-import infra
+from infra import Infra
 import input
+import infra
 from DAW import DAW
 from workflow_generation import workflow
 from to_nextflow import to_nextflow
@@ -16,14 +17,16 @@ with open('/home/ninon/description_prototype/v1/INFRA.json') as jsonfile:
     infra_description = json.load(jsonfile)
 
 #define objects for infra + nodes
-#my_infra = infra(infra_description)
+my_infra = Infra(infra_description)
 
 #define objects for input + reference
 #my_input = input(input_description)
 
 # define object for DAW + task + connection
 my_DAW = DAW(daw_description, input_description, infra_description)
+my_DAW = DAW.rewrite(input_description, infra_description)
 to_nextflow(my_DAW)
+
 #my_DAW
 
 # # define library of tasks Nextflow(->nfcore) / CWL find repos

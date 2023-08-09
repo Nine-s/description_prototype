@@ -1,4 +1,5 @@
 import os
+import pathlib 
 import csv
 
 class Input:  
@@ -6,101 +7,39 @@ class Input:
 
     name:str = "sample"
     input_type:str = "reads"
-    paths:str = ""
+    paths = []
     size:float = 1
     paired:bool = True
     strand:str = "forward"
     ref_type:str = ""
+    uncompressed_size:int = 1 #GB
 
-    def __init__(self, name, input_type, paths, strand, ref_type):
+    def __init__(self, name, input_type, paths, strand, ref_type, uncompressed_size):
         self.name = name
-        self.input_type = input_type
+        possible_input_types = ["sample", "reference"]
+        self.uncompressed_size = uncompressed_size
+        if not (input_type in possible_input_types): raise Exception( 'The variable "input_type" should be either "sample" or "reference"')
+        else: self.input_type = input_type
+
+        for path in paths:
+            if not (os.path.exists(path)): raise Exception( 'The input file provided ' + path + ' does not exist') 
         self.paths = paths
-        self.strand = strand
-        self.ref_type = ref_type
+        
+        possible_strand_types = ["forward", "reverse", "unstranded"]
 
-    # number_of_samples:int = 1
-    # samples:list = []
-    # references:dict = {}
-#     def __init__(self, input_description):
-#         # get samples
-#         samples_list= []
-#         nb_samples_tmp = 0
-#         for i in range(len(input_description["samples"])):
-#             nb_samples_tmp += 1
-#             json_sample = input_description["samples"][i]
-#             new_sample = Sample(json_sample)
-#             samples_list.append(new_sample)
-#         self.samples = samples_list
-#         self.create_input_csv()
-#         self.number_of_samples = nb_samples_tmp
+        possible_ref_types = ["genome", "annotation", "others"]
+        
 
-#         #get references
-#         references_dict= {}
-#         for i in range(len(input_description["references"])):
-#             json_ref = input_description["references"][i]
-#             new_ref = Reference(json_ref)
-#             references_dict[new_ref.ref_type] = new_ref
-#         self.references = references_dict
-#         print(references_dict)
+        if (input_type=="sample"):
+            if (strand not in possible_strand_types): 
+                raise Exception( 'The variable "strand" should be "forward", "reverse" or "unstranded", not '+strand)
+            else:
+                self.strand = strand
 
-#     # def create_input_csv(self):
-#     #     # TODO: Create csv file with inputs here?
-#     #     with open('input.csv', 'w') as csvfile:
-#     #         filewriter = csv.writer(csvfile, delimiter=',',
-#     #                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-#     #         filewriter.writerow(['Sample', 'path_r1', 'path_r2', 'strand'])
-#     #         for sample in self.samples:
-#     #                 filewriter.writerow([sample.name, sample.path_r1, sample.path_r2, sample.strand])
+        elif (input_type=="reference"):
             
-
-# class Sample: 
-
-#     name:str = "sample"
-#     type:str = "reads"
-#     path_r1:str = ""
-#     path_r2:str = ""
-#     paired:bool = True
-#     strand:str = "forward"
-#     size:float = 1
-
-#     def get_strand(self, strand):
-#         strand_possibilities = ["forward", "reverse", "unstranded"]
-#         if (strand in strand_possibilities):
-#             return strand
-#         else:
-#             raise Exception("strand provided invalid or missing")
-
-#     def __init__(self, sample_description): 
-#         self.path_r1 = sample_description["path_r1"]
-#         if (sample_description["path_r2"] != ""):
-#             self.paired = True
-#             self.path_r2 = sample_description["path_r2"]
-#         else:
-#             self.paired = False
-#         self.name:str = sample_description["name"]
-#         self.size = os.path.getsize(self.path_r1)
-#         #todo: include size2
-#         self.strand = self.get_strand(sample_description["strand"])
-#         self.type = sample_description["type"]
-
-# class Reference:  
-
-#     name:str = ""
-#     path:str = ""
-#     ref_type:str = ""
-#     size = 1
-
-#     def __init__(self, description): 
-#         self.name:str = description["name"]
-#         self.path:int = description["path"]
-#         self.ref_type:str = self.get_ref_type(description["type"])
-#         self.size = os.path.getsize(self.path)
-    
-#     def get_ref_type(self, ref_type):
-#         ref_type_possibilities = ["genome", "cdna", "gtf"] 
-#         # TODO: add VCF (SNP/SNV db), and others
-#         if (ref_type in ref_type_possibilities):
-#             return ref_type
-#         else:
-#             raise Exception("ref type invalid or missing") 
+            if not (ref_type in possible_ref_types): raise Exception( 'The variable "strand" should be "genome", "annotation" or "others"')
+            self.ref_type = ref_type
+            strand = ""
+            
+        

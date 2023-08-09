@@ -12,28 +12,26 @@ class Task:
     module_name:str = ""
     module_path:str = ""
 
-
-    def find_module_path(self):
-        #TODO
-        # read library file and infer module_name and module_path
-        # using the DAW description json
-        return
-
     def create_input(self, inputs_from_DAW, input_description):
         list_inputs = []
         for input in inputs_from_DAW:
-            # if ("out_channel" in input):
-            #     mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "")
-            #     list_inputs.append(mInput)
-            # else:
+            is_input_described = False
+            if(".out" in input):
+                continue ###TODOOOOO
             for sample in input_description["samples"]:
                 if (sample["name"] == input):
-                    mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "")
+                    mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
                     list_inputs.append(mInput)
+                    is_input_described = True
+            if(is_input_described):
+                continue
             for reference in input_description["references"]:
                 if (reference["name"] == input):
                     mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"])
-                    list_inputs.append(mInput)        
+                    list_inputs.append(mInput)   
+                    is_input_described = True
+            if not is_input_described:
+                    raise Exception( 'The input "' + input + '" of the task '+ self.name + ' was not described in the input description file')
         return list_inputs
 
     def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
@@ -46,9 +44,9 @@ class Task:
         self.module_path:str = module_path
         inputs = self.create_input(inputs_from_DAW, input_description)
         self.inputs = inputs
-        self.inputs_tasks:list = inputs_from_DAW
+        self.inputs_task:list = inputs_from_DAW
         require_input_from_list = []
-        for input in self.inputs_tasks:        
+        for input in self.inputs_task:        
             if (".out_channel." in input):
                 require_input_from_list.append(input)
         self.require_input_from:list = require_input_from_list #build_task_dependencies(require_input_from)

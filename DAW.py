@@ -1,6 +1,9 @@
 from task import Task
 from input import Input
 from infra import Infra
+import Replace
+#import Split
+#import Compress
 
 class DAW:  
 
@@ -71,7 +74,7 @@ class DAW:
             tasks_priority.append(index)
         return tasks_priority
 
-    # Creates a DAW object from the json description 
+    # Creates a DAW object from the description 
     def __init__    (self, DAW_description, input_description, infra_description):
         # create task objects
         self.infra = infra_description
@@ -85,16 +88,16 @@ class DAW:
             tasks_list.append(new_task)
         self.tasks = tasks_list
         # define their priority
-        self.tasks_priority = self.define_tasks_priority() #define
+        self.tasks_priority = self.define_tasks_priority() 
     
 
-    # Uses infra and input objects to understand IF the workflow should be rewritten and how
-    def rewriting_DAWs(self, input, infra):
-        old_tasks_priority = self.tasks_priority()
-        old_tasks = self.tasks()
-        for task_index in range(len(old_tasks)):
-            if (self.tasks[task_index].operation == "aligner"):
-                return
+    # # Uses infra and input objects to understand IF the workflow should be rewritten and how
+    # def rewriting_DAWs(self, input, infra):
+    #     old_tasks_priority = self.tasks_priority()
+    #     old_tasks = self.tasks()
+    #     for task_index in range(len(old_tasks)):
+    #         if (self.tasks[task_index].operation == "aligner"):
+    #             return
 
         #self.tasks, DAW.tasks_priority = rewrite_DAW(self, infra, input)
 
