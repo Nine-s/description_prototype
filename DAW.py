@@ -99,7 +99,7 @@ class DAW:
     #         if (self.tasks[task_index].operation == "aligner"):
     #             return
 
-        #self.tasks, DAW.tasks_priority = rewrite_DAW(self, infra, input)
+    #self.tasks, DAW.tasks_priority = rewrite_DAW(self, infra, input)
 
     def my_print(self):
         print("DAW")

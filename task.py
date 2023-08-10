@@ -27,7 +27,7 @@ class Task:
                 continue
             for reference in input_description["references"]:
                 if (reference["name"] == input):
-                    mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"])
+                    mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"], reference["uncompressed_size"])
                     list_inputs.append(mInput)   
                     is_input_described = True
             if not is_input_described:

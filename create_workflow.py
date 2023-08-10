@@ -24,7 +24,7 @@ my_infra = Infra(infra_description)
 
 # define object for DAW + task + connection
 my_DAW = DAW(daw_description, input_description, infra_description)
-my_DAW = DAW.rewrite(input_description, infra_description)
+#my_DAW = DAW.rewrite(input_description, infra_description)
 to_nextflow(my_DAW)
 
 #my_DAW

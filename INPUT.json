@@ -23,13 +23,15 @@
     {
        "name": "ref_gtf",
        "path": "/home/ninon/description_prototype/data/test_sam_cuff/",
-       "reference_type": "annotation"
+       "reference_type": "annotation",
+       "uncompressed_size": "5"
     },
 
     {
        "name": "ref_genome",
        "path": "/home/ninon/description_prototype/data/test_sam_cuff/",
-       "reference_type": "genome"
+       "reference_type": "genome",
+       "uncompressed_size": "15"
     }
 
  ]
