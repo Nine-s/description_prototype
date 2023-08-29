@@ -4,17 +4,24 @@
     "domain_specific_features": "splice_junctions",
     "is_splittable": "True",
     "mendatory_input_list": ["reads", "ref_genome", "ref_TODO"],
-    "other_inputs": ["lalala"],
+    "optional_inputs_list": ["lalala"],
     "output_list": "IS IT NECESSARY?",
 
-    "ressource_requirements_RAM": [
+    "resource_requirements_RAM": [
         {
+            "organism_name": "drosophila",
             "reference_size": "120",
             "RAM": "15GB"
         },
         {
+            "organism_name": "mouse",
             "reference_size": "260",
             "RAM": "30GB"
+        },
+        {
+            "organism_name": "human",
+            "reference_size": "399",
+            "RAM": "35GB"
         }
     ]
 }

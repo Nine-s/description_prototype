@@ -4,10 +4,10 @@
     "domain_specific_features": "quasi-mapping",
     "is_splittable": "False",
     "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
-    "other_inputs": ["lalala"],
+    "optional_inputs_list": ["lalala"],
     "output_list": ["quant"],
 
-    "ressource_requirements_RAM": [
+    "resource_requirements_RAM": [
         {
             "reference_size": "120",
             "RAM": "15GB"

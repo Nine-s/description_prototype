@@ -5,14 +5,12 @@
                 {
                         "dataset_size": "3,5",
                         "infrastructure_1":{
-                                "type": "cluster",
                                 "STAR": "9",
                                 "Salmon": "5",
                                 "Hisat2": "14",
                                 "Kallisto": "2"
                         },
                         "infrastructure_2":{  
-                                "type":"standalone",
                                 "STAR": "3",
                                 "Salmon": "17",
                                 "Hisat2": "12",
@@ -22,14 +20,12 @@
                 {
                         "dataset_size": "13",
                         "infrastructure_1":{
-                                "type":"cluster",
                                 "STAR": "16",
                                 "Salmon": "15",
                                 "Hisat2": "45",
                                 "Kallisto": "5"
                         },
                         "infrastructure_2":{       
-                                "type":"standalone",
                                 "STAR": "13",
                                 "Salmon": "30",
                                 "Hisat2": "55",
@@ -39,14 +35,12 @@
                 {
                         "dataset_size": "48",
                         "infrastructure_1":{
-                                "type":"cluster",
                                 "STAR": "13",
                                 "Salmon": "150",
                                 "Hisat2": "200",
                                 "Kallisto": "130"
                                 },
                         "infrastructure_2":{
-                                "type":"standalone",
                                 "STAR": "60",
                                 "Salmon": "140",
                                 "Hisat2": "210",

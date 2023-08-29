@@ -20,7 +20,7 @@ class Input:
         self.uncompressed_size = uncompressed_size
         if not (input_type in possible_input_types): raise Exception( 'The variable "input_type" should be either "sample" or "reference"')
         else: self.input_type = input_type
-
+        #TODO after testing: number of lines and uncompressed size from os.command
         for path in paths:
             if not (os.path.exists(path)): raise Exception( 'The input file provided ' + path + ' does not exist') 
         self.paths = paths

@@ -1,0 +1,7 @@
+Dataset_size	Infrastructure	STAR	Salmon	Hisat2	Kallisto
+3.5	1	9	5	14	2
+13	1	15	6	20	5
+48	1	50	9	25	7
+3.5	2	9	6	16	4
+13	2	15	8	40	6
+48	2	50	40	120	9
