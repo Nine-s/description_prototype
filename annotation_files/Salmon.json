@@ -4,8 +4,8 @@
     "domain_specific_features": "quasi-mapping",
     "is_splittable": "False",
     "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
-    "optional_inputs_list": ["lalala"],
-    "output_list": ["quant"],
+    "optional_inputs_list": ["bam"],
+    "output_list": ["quant_table"],
 
     "resource_requirements_RAM": [
         {
@@ -18,3 +18,5 @@
         }
     ]
 }
+
+

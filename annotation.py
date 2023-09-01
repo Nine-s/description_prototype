@@ -13,58 +13,52 @@ class AnnotationDB:
 
     @staticmethod
     def Create_runtime_estimation_model(runtime_measured):
-        #TODO: edit runtime aligner with real values
+        #TODO: add kallisto when completed
 
-        df_runtime = pd.read_csv(runtime_measured, delimiter="\t")
+        df_runtime = pd.read_csv(runtime_measured, delimiter=",")
+        aligners = (df_runtime.columns[2:])
 
-        # TODO: compute regressions per tool and infrastructure
-        # TODO: check if relative time factors between the tools are consistant between the infrastructures
-        return
-        #df = pd.DataFrame({'reference_sizes': reference_sizes, 'ram_used': ram_used })
-        #df.head()
-        
-        # X = df.iloc[:,:-1].values # feature matrix: reference_sizes
-        # y = df.iloc[:,1].values # response vector: ram_used
+        infrastructures = df_runtime["infrastructure"].unique()
 
-        # # print("X")
-        # # print(X)
-        # # print("y")
-        # # print(y)
+        list_models = []
+        for infra in infrastructures: 
+            df_infra = df_runtime.loc[df_runtime["infrastructure"] == infra]
+            this_infra = []
+            for aligner in aligners:
+                df = pd.DataFrame({'reference_sizes': df_infra["dataset_size"], 'runtime': df_infra[aligner] })
+                X = df.iloc[:,:-1].values # feature matrix: reference_sizes
+                y = df.iloc[:,1].values # response vector: ram_used
+                model = LinearRegression()
+                model.fit(X, y)
+                #plt.scatter(X, y)
+                #plt.plot(X, model.predict(X))
 
-        # model = LinearRegression()
-        # model.fit(X, y)
-
-        # ###plot
-        # # plt.scatter(X, y,color='g')
-        # # plt.plot(X, model.predict(X),color='k')
-        # # plt.show()
-
-        # return model
-        return
+                this_infra.append(model)
+            #plt.show()
+            list_models.append(this_infra)
+        return list_models
 
     def __init__    (self, annotation_files_list):
         
         path_runtimes = "./annotation_files/runtime_aligners.csv"
         if( os.path.isfile(path_runtimes) == False):
             raise Exception("File missing: "+path_runtimes) 
-
+        else:
+            with open(path_runtimes) as mfile:
+                self.rumtime_estimation_model = self.Create_runtime_estimation_model(mfile)
         annotation_db = []
         for file_path in annotation_files_list:
-            ##todo: find runtime file associated
-            if ("runtime" in file_path):
-                with open(file_path) as mfile:
-                    self.rumtime_estimation_model = self.Create_runtime_estimation_model(mfile)
-            else:
-                with open(file_path) as json_file:
-                    tool_annotated = ToolAnnotation(json.load(json_file))
-                annotation_db.append(tool_annotated)
+            with open(file_path) as json_file:
+                print(file_path)
+                tool_annotated = ToolAnnotation(json.load(json_file))
+            annotation_db.append(tool_annotated)
         self.annotation_db = annotation_db
         
 
 class ToolAnnotation:
 
     toolname:str = ""
-    operation:str = ""
+    operation:list = []
     domain_specific_features:list = []
     is_splittable:bool = False
     mendatory_input_list:list = []
@@ -79,11 +73,6 @@ class ToolAnnotation:
         X = df.iloc[:,:-1].values # feature matrix: reference_sizes
         y = df.iloc[:,1].values # response vector: ram_used
 
-        # print("X")
-        # print(X)
-        # print("y")
-        # print(y)
-
         model = LinearRegression()
         model.fit(X, y)
 
@@ -95,7 +84,7 @@ class ToolAnnotation:
         return model
     
     def __init__ (self, tool_description):
-        #print(tool_description)
+        print(tool_description)
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
         self.domain_specific_features = tool_description["domain_specific_features"]

@@ -12,7 +12,7 @@ from annotation import AnnotationDB
 annotation_files = []
 annotation_path = './annotation_files'
 for i in os.listdir(annotation_path):
-    if (i.endswith('.json') or i.endswith('.csv') ):
+    if (i.endswith('.json')):
         full_path = '%s/%s' % (annotation_path, i)
         annotation_files.append(full_path)
         #print(full_path)
