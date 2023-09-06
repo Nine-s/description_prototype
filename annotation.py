@@ -20,10 +20,10 @@ class AnnotationDB:
 
         infrastructures = df_runtime["infrastructure"].unique()
 
-        list_models = []
+        list_models = {}
         for infra in infrastructures: 
             df_infra = df_runtime.loc[df_runtime["infrastructure"] == infra]
-            this_infra = []
+            this_infra = {}
             for aligner in aligners:
                 df = pd.DataFrame({'reference_sizes': df_infra["dataset_size"], 'runtime': df_infra[aligner] })
                 X = df.iloc[:,:-1].values # feature matrix: reference_sizes
@@ -31,11 +31,10 @@ class AnnotationDB:
                 model = LinearRegression()
                 model.fit(X, y)
                 #plt.scatter(X, y)
-                #plt.plot(X, model.predict(X))
-
-                this_infra.append(model)
+                #plt.plot(X, model.predict(X)
+                this_infra[aligner] = model
             #plt.show()
-            list_models.append(this_infra)
+            list_models[infra] = this_infra
         return list_models
 
     def __init__    (self, annotation_files_list):
