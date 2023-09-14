@@ -79,11 +79,10 @@ class AnnotationDB:
                 split_estimators = self.Create_split_runtime_estimation_model(mfile)   
         for infra in split_estimators:
         	self.runtime_estimation_model[infra]["split_merge"] = split_estimators[infra]                          
-        print(self.runtime_estimation_model)
         annotation_db = []        
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
-                print(file_path)
+                print(file_path)                
                 tool_annotated = ToolAnnotation(json.load(json_file))
             annotation_db.append(tool_annotated)
         self.annotation_db = annotation_db
@@ -118,7 +117,6 @@ class ToolAnnotation:
         return model
     
     def __init__ (self, tool_description):
-        print(tool_description)
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
         self.domain_specific_features = tool_description["domain_specific_features"]

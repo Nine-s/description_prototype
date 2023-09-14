@@ -11,7 +11,7 @@ def min_beneficial_split(alignment_task, median_input_size, annotation_database,
 
     #estimate time it takes to split
     split_time = split_model[0] * median_input_size + split_model[1]
-    
+      
     #estimate alignment runtime without splitting
     align_time_no_split = align_model.predict(median_input_size.reshape(-1, 1))[0]
     
@@ -29,11 +29,16 @@ def min_beneficial_split(alignment_task, median_input_size, annotation_database,
 def split(DAW, annotation_database):
 
     alignment_task = next(task for task in DAW.tasks if task.operation == "align")
+    annotation_aligner = next(aligner for aligner in annotation_database.annotation_db if aligner.toolname == alignment_task.tool)
+    if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
+        return DAW
+    
     median_input_size = np.array(0.4) #TODO: get real median input size, so far input obj of DAW is empty
     infra_name = "kubernetes-cluster"#TODO: infra may need an identifier to get corresponding entries from the annotation database?
     min_beneficial_split(alignment_task, median_input_size, annotation_database, infra_name)
-    get_split_somayeh = min_beneficial_split #TODO: implement real approach for getting number of chunks here
-    #TODO: implement changes in DAW object
+    split_number = min_beneficial_split #TODO: implement real approach for getting number of chunks here
+    DAW = DAW #TODO: implement changes in DAW object
+
     
     return DAW
     
