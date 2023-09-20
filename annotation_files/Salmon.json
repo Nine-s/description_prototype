@@ -4,17 +4,23 @@
     "domain_specific_features": "quasi-mapping",
     "is_splittable": "False",
     "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
-    "optional_inputs_list": ["bam"],
     "output_list": ["quant_table"],
 
     "resource_requirements_RAM": [
         {
+            "organism_name": "drosophila",
             "reference_size": "120",
             "RAM": "15GB"
         },
         {
+            "organism_name": "mouse",
             "reference_size": "260",
             "RAM": "30GB"
+        },
+        {
+            "organism_name": "human",
+            "reference_size": "399",
+            "RAM": "35GB"
         }
     ]
 }
