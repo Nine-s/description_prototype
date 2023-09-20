@@ -9,7 +9,7 @@ import os
 class AnnotationDB:  
 
     annotation_db:list = []
-    rumtime_estimation_model:object = None
+    runtime_estimation_model:object = None
 
     @staticmethod
     def Create_runtime_estimation_model(runtime_measured):
@@ -45,11 +45,11 @@ class AnnotationDB:
             raise Exception("File missing: "+path_runtimes) 
         else:
             with open(path_runtimes) as mfile:
-                self.rumtime_estimation_model = self.Create_runtime_estimation_model(mfile)
+                self.runtime_estimation_model = self.Create_runtime_estimation_model(mfile)
         annotation_db = []
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
-                print(file_path)
+                #print(file_path)
                 tool_annotated = ToolAnnotation(json.load(json_file))
             annotation_db.append(tool_annotated)
         self.annotation_db = annotation_db
@@ -63,7 +63,7 @@ class ToolAnnotation:
     is_splittable:bool = False
     mendatory_input_list:list = []
     output_list:list = []
-    optional_inputs_list:list = []
+    #optional_inputs_list:list = []
     RAM_requirements_model:object = None
 
     @staticmethod
@@ -84,13 +84,13 @@ class ToolAnnotation:
         return model
     
     def __init__ (self, tool_description):
-        print(tool_description)
+        #print(tool_description)
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
         self.domain_specific_features = tool_description["domain_specific_features"]
         self.is_splittable = tool_description["is_splittable"]
         self.mendatory_input_list = tool_description["mendatory_input_list"]
-        self.optional_inputs_list = tool_description["optional_inputs_list"]
+        #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
 
         reference_sizes = []
