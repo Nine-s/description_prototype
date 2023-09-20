@@ -76,7 +76,7 @@ class DAW:
         return tasks_priority
 
     # Creates a DAW object from the description 
-    def __init__    (self, DAW_description, input_description, infra):
+    def __init__    (self, DAW_description, input_description, infra, annotDB):
         # create task objects
         self.infra = infra
         #self.input = Input(input_description)
@@ -90,11 +90,12 @@ class DAW:
         self.tasks = tasks_list
         # define their priority
         self.tasks_priority = self.define_tasks_priority() 
+        self.rewrite(annotDB)
     
-    def rewrite(self):
-        new_daw = replace_tool(self)
-        new_daw = split(new_daw)
-        #TODO: compress. Here?
+    def rewrite(self, annotationdb):
+        new_daw = replace_tool(self, annotationdb)
+        # new_daw = split(new_daw)
+        # TODO: compress. Here?
         return new_daw 
 
     def my_print(self):
