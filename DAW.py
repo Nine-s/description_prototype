@@ -74,8 +74,9 @@ class DAW:
             index = ordered_tasks_list.index(task_name)
             tasks_priority.append(index)
         return tasks_priority
-
+    
     # Creates a DAW object from the description 
+
     def __init__    (self, DAW_description, input_description, infra, annotDB):
         # create task objects
         self.infra = infra
@@ -90,12 +91,13 @@ class DAW:
         self.tasks = tasks_list
         # define their priority
         self.tasks_priority = self.define_tasks_priority() 
-        self.rewrite(annotDB)
+        self.rewrite(annotation_database)
     
-    def rewrite(self, annotationdb):
-        new_daw = replace_tool(self, annotationdb)
-        # new_daw = split(new_daw)
-        # TODO: compress. Here?
+    def rewrite(self, annotDB):
+        #new_daw = replace_tool(self)
+        new_daw = split(self, annotDB)
+        #TODO: compress. Here?
+
         return new_daw 
 
     def my_print(self):

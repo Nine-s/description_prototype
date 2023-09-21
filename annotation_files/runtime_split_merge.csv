@@ -1,0 +1,7 @@
+infrastructure,dataset_size,duration
+kubernetes-cluster,3.5,558.0
+kubernetes-cluster,13.0,1601.2
+kubernetes-cluster,48.0,6713.0
+redwood,3.5,105.9
+redwood,13.0,610.8
+redwood,48.0,1833.5
