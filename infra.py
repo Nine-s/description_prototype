@@ -4,6 +4,7 @@ class Infra:
     is_cluster:bool = True
     number_nodes:int = 1
     list_nodes:list = []
+    RAM:int = 1
 
     def __init__(self, infra_description_json): 
             list_nodes = [] 
@@ -11,6 +12,7 @@ class Infra:
                 my_node = Node(node["name"], node["RAM"], node["cores"], node["CPU"])
                 list_nodes.append(my_node)
             self.list_nodes:list = list_nodes
+            self.RAM = list_nodes[0].ram
             if (len(list_nodes) > 1):
                 self.is_cluster:bool = True
                 self.number_nodes:int = len(list_nodes)

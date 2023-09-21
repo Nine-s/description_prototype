@@ -1,5 +1,5 @@
 {
-    "toolname": "STAR",
+    "toolname": "Hisat2",
     "operation": "align",
     "domain_specific_features": "splice_junctions",
     "is_splittable": "True",
