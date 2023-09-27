@@ -102,6 +102,7 @@ class DAW:
         #     print(task.name)
         # new_daw = split(new_daw)
         # TODO: compress. Here?
+        # TODO: generate description
         #return new_daw 
         return
 
