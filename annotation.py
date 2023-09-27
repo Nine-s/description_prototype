@@ -12,7 +12,7 @@ class AnnotationDB:
     runtime_estimation_model:object = None
 
     @staticmethod
-    def Create_runtime_estimation_model(runtime_measured):
+    def create_runtime_estimation_model(runtime_measured):
         #TODO: add kallisto when completed
 
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
@@ -45,7 +45,7 @@ class AnnotationDB:
             raise Exception("File missing: "+path_runtimes) 
         else:
             with open(path_runtimes) as mfile:
-                self.runtime_estimation_model = self.Create_runtime_estimation_model(mfile)
+                self.runtime_estimation_model = self.create_runtime_estimation_model(mfile)
         annotation_db = []
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
@@ -85,6 +85,7 @@ class ToolAnnotation:
     
     def __init__ (self, tool_description):
         #print(tool_description)
+
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
         self.domain_specific_features = tool_description["domain_specific_features"]
@@ -92,7 +93,7 @@ class ToolAnnotation:
         self.mendatory_input_list = tool_description["mendatory_input_list"]
         #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
-
+        self.module_path =  tool_description["module_path"]
         reference_sizes = []
         ram_used = []
         for resource_requirements in tool_description["resource_requirements_RAM"]:

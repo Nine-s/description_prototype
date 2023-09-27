@@ -2,9 +2,11 @@ import os
 import pathlib 
 import csv
 
-class Input:  
 
+    
+class Input:
 
+    uncompressed_size:int = 1 #GB
     name:str = "sample"
     input_type:str = "reads"
     paths = []
@@ -12,9 +14,10 @@ class Input:
     paired:bool = True
     strand:str = "forward"
     ref_type:str = ""
-    uncompressed_size:int = 1 #GB
+
 
     def __init__(self, name, input_type, paths, strand, ref_type, uncompressed_size):
+        
         self.name = name
         possible_input_types = ["sample", "reference"]
         self.uncompressed_size = uncompressed_size
@@ -43,3 +46,35 @@ class Input:
             strand = ""
             
         
+class Input_of_DAW:  
+
+    number_of_samples:int = 0
+    sizes_of_samples:list = []
+    input_samples:list = []
+    input_references:list = []
+    size_of_reference_genome_max:int = 0 #TODO: consider metagenomics: add a condition to take the max number?
+
+    def __init__(self, input_description):
+        _input_samples = []
+        _input_references = []
+        _size_of_samples = []
+        _size_of_reference_genome_max = -1
+        
+        for sample in input_description["samples"]:
+            mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
+            _input_samples.append(mInput)     
+            _size_of_samples.append(sample["uncompressed_size"])
+                
+        for reference in input_description["references"]:
+            mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"], reference["uncompressed_size"])
+            _input_references.append(mInput)  
+            if (reference["reference_type"] == "reference_genome"):
+                if (_size_of_reference_genome_max == -1):
+                    _size_of_reference_genome_max = reference["uncompressed_size"]
+                else:
+                    _size_of_reference_genome_max = max(_size_of_reference_genome_max, int(reference["uncompressed_size"]))
+        self.number_of_samples = len(_input_samples)         
+        self.input_references = _input_references
+        self.input_samples = _input_samples     
+        self.size_of_reference_genome_max = _size_of_reference_genome_max
+       
