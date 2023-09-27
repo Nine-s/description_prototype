@@ -14,7 +14,7 @@ class AnnotationDB:
 
 
     @staticmethod
-    def Create_alignment_runtime_estimation_model(runtime_measured):
+    def create_alignment_runtime_estimation_model(runtime_measured):
         #TODO: add kallisto when completed
 
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
@@ -40,7 +40,7 @@ class AnnotationDB:
         return list_models
 
     @staticmethod
-    def Create_split_runtime_estimation_model(runtime_measured):
+    def create_split_runtime_estimation_model(runtime_measured):
 
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
 
@@ -69,14 +69,14 @@ class AnnotationDB:
             raise Exception("File missing: "+path_runtimes_align) 
         else:
             with open(path_runtimes_align) as mfile:
-                self.runtime_estimation_model = self.Create_alignment_runtime_estimation_model(mfile)  
+                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model(mfile)  
                  
         path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
             raise Exception("File missing: "+path_runtimes_split) 
         else:
             with open(path_runtimes_split) as mfile:
-                split_estimators = self.Create_split_runtime_estimation_model(mfile)   
+                split_estimators = self.create_split_runtime_estimation_model(mfile)   
         for infra in split_estimators:
         	self.runtime_estimation_model[infra]["split_merge"] = split_estimators[infra]                          
         annotation_db = []        
@@ -119,8 +119,6 @@ class ToolAnnotation:
     
     def __init__ (self, tool_description):
 
-        #print(tool_description)
-        
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
         self.domain_specific_features = tool_description["domain_specific_features"]
@@ -128,7 +126,7 @@ class ToolAnnotation:
         self.mendatory_input_list = tool_description["mendatory_input_list"]
         #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
-
+        self.module_path =  tool_description["module_path"]
         reference_sizes = []
         ram_used = []
         for resource_requirements in tool_description["resource_requirements_RAM"]:

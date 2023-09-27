@@ -1,5 +1,5 @@
 from task import Task
-from input import Input
+from input import Input_of_DAW
 from infra import Infra
 from Replace import replace_tool
 from Split import split
@@ -11,7 +11,7 @@ class DAW:
     tasks:list = []
     tasks_priority:list = []
     is_scatter_gather:bool = False
-    input:Input = None
+    input:Input_of_DAW = None
     infra:Infra = None
 
     @staticmethod
@@ -74,13 +74,15 @@ class DAW:
             index = ordered_tasks_list.index(task_name)
             tasks_priority.append(index)
         return tasks_priority
+
     
     # Creates a DAW object from the description 
+
 
     def __init__    (self, DAW_description, input_description, infra, annotDB):
         # create task objects
         self.infra = infra
-        #self.input = Input(input_description)
+        self.input = Input_of_DAW(input_description)
         tasks_list = []
         for i in range(len(DAW_description["tasks"])):
             json_task = DAW_description["tasks"][i]
@@ -91,14 +93,17 @@ class DAW:
         self.tasks = tasks_list
         # define their priority
         self.tasks_priority = self.define_tasks_priority() 
-        self.rewrite(annotDB)
+        self.rewrite(annotDB, input_description)
     
-    def rewrite(self, annotDB):
-        #new_daw = replace_tool(self)
-        new_daw = split(self, annotDB)
-        #TODO: compress. Here?
-
-        return new_daw 
+    def rewrite(self, annotationdb, input_description):
+        # new_daw = replace_tool(self, annotationdb, input_description, self.input)
+        # for task in new_daw.tasks:
+        #     print(task.name)
+        new_daw = split(self, annotationdb)
+        # TODO: compress. Here?
+        # TODO: generate description
+        #return new_daw 
+        return
 
     def my_print(self):
         print("DAW")

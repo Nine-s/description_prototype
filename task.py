@@ -11,13 +11,14 @@ class Task:
     require_input_from:list = [] 
     module_name:str = ""
     module_path:str = ""
+    inputs_from_DAW = ""
 
     def create_input(self, inputs_from_DAW, input_description):
         list_inputs = []
         for input in inputs_from_DAW:
             is_input_described = False
             if(".out" in input):
-                continue ###TODOOOOO
+                continue #TODO: check if the name before "out" exists 
             for sample in input_description["samples"]:
                 if (sample["name"] == input):
                     mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
@@ -36,12 +37,13 @@ class Task:
 
     def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
         self.name:str = name
-        self.tool:int = tool
+        self.tool:str = tool
         self.outputs:list = outputs
         self.parameters:list = parameters
         self.operation:str = operation
         self.module_name:str = module_name
         self.module_path:str = module_path
+        self.inputs_from_DAW = inputs_from_DAW
         inputs = self.create_input(inputs_from_DAW, input_description)
         self.inputs = inputs
         self.inputs_task:list = inputs_from_DAW
@@ -60,75 +62,3 @@ class Task:
         print(str(self.parameters))
         print(str(self.operation))
         print(self.require_input_from)
-
-    # def build_nextflow(self):
-    #     task_name 
-    #     task_label
-    #     input
-    #     output
-    #     script
-    #     basecommand
-    #     parameters
-    
-    # def build_CWL(self):
-    #     print("After calling func() method..")
-    #     print("My dog's name is", self.name)
-    #     print("His color is", self.color)
-
-
-# class inputs:  
-
-# class outputs:
-
-# class parameters:
-
-
-    # _name:str = "task_default"
-    # _tool:str = "none"
-    # _operation:str = "none"
-    # _inputs:list = []
-    # _outputs:list = []
-    # _parameters:list = []
-    # _require_input_from:list = [] 
-
-    # @property
-    # def name(self):
-    #     return type(self)._name
-    # @name.setter
-    # def name(self, value):
-    #     type(self)._name = str(value)
-
-    # @property
-    # def tool(self):
-    #     return type(self)._tool
-    # @tool.setter
-    # def tool(self, value):
-    #     type(self)._tool = str(value)
-
-    # @property
-    # def inputs(self):
-    #     return type(self)._inputs
-    # @inputs.setter
-    # def inputs(self, value):
-    #     type(self)._inputs = list(value)
-
-    # @property
-    # def outputs(self):
-    #     return type(self)._outputs
-    # @outputs.setter
-    # def outputs(self, value):
-    #     type(self)._outputs = list(value)
-
-    # @property
-    # def parameters(self):
-    #     return type(self)._parameters
-    # @parameters.setter
-    # def parameters(self, value):
-    #     type(self)._parameters = list(value)
-
-    # @property
-    # def require_input_from(self):
-    #     return type(self)._require_input_from
-    # @require_input_from.setter
-    # def require_input_from(self, value):
-    #     type(self)._require_input_from = list(value)
