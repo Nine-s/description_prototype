@@ -35,6 +35,15 @@ class Task:
                     raise Exception( 'The input "' + input + '" of the task '+ self.name + ' was not described in the input description file')
         return list_inputs
 
+    def change_input(self, new_input, old_input_position):
+    	old_input = self.inputs[old_input_position]
+    	self.inputs.pop(old_input_position)
+    	self.inputs_task[old_input_position] = new_input
+    	if ".out" in new_input and new_input not in self.require_input_from:
+    	    self.require_input_from.append(new_input)
+    	if isinstance(old_input, str) and ".out" in old_input:
+            self.require_input_from.remove(old_input)   
+        
     def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
         self.name:str = name
         self.tool:str = tool
