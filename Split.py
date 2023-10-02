@@ -69,15 +69,21 @@ def split(DAW, annotation_database, input_description):
         else: #no next task found
             task_splittable = False       
     #TODO: find children of last splittable task
+    output_last_split_task = last_split_task.name + ".out_channel." + last_split_task.outputs[0]
+    child_tasks = [task for task in DAW.tasks if output_last_split_task in task.require_input_from]
+
     read_input_align_tool = next(input for input in first_split_task.inputs if input.input_type == "sample")
     read_input_from_DAW = first_split_task.inputs_from_DAW[first_split_task.inputs.index(read_input_align_tool)]
-    reads_per_split = 10000 #TODO: calculate reads per split
-    split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], ["-n " + str(reads_per_split)], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
+    split_parameter = split_number #TODO: add split param as global workflow parameter
+    split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
     split_task_output = split_task.name + ".out_channel." + split_task.outputs[0]
-    first_split_task.change_input(split_task_output, first_split_task.inputs.index(read_input_align_tool))
+    first_split_task.change_input(split_task_output, read_input_align_tool)
     DAW.insert_tasks(split_task)
-    
-
+    merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", "/home/ninon/modules/samtools_merge.nf", input_description)
+    merge_task_output = merge_task.name + ".out_channel." + merge_task.outputs[0]
+    for child_task in child_tasks:
+        child_task.change_input(merge_task_output, output_last_split_task)
+    DAW.insert_tasks(merge_task)
     
     return DAW
     
