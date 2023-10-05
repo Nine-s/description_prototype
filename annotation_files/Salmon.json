@@ -10,18 +10,18 @@
     "resource_requirements_RAM": [
         {
             "organism_name": "drosophila",
-            "reference_size": "120",
-            "RAM": "15GB"
+            "reference_size": "0.137G",
+            "RAM": "2G"
         },
         {
             "organism_name": "mouse",
-            "reference_size": "260",
-            "RAM": "30GB"
+            "reference_size": "2.6G",
+            "RAM": "20G"
         },
         {
             "organism_name": "human",
-            "reference_size": "399",
-            "RAM": "35GB"
+            "reference_size": "3.2G",
+            "RAM": "20G"
         }
     ]
 }

@@ -12,7 +12,7 @@ class Infra:
                 my_node = Node(node["name"], node["RAM"], node["cores"], node["CPU"])
                 list_nodes.append(my_node)
             self.list_nodes:list = list_nodes
-            self.RAM = list_nodes[0].ram
+            self.RAM = float(list_nodes[0].ram[:-1])
             if (len(list_nodes) > 1):
                 self.is_cluster:bool = True
                 self.number_nodes:int = len(list_nodes)

@@ -1,7 +1,9 @@
 
 from sklearn.linear_model import LinearRegression
 from scipy.optimize import nnls
+import numpy as np
 from matplotlib import pyplot as plt
+import plotly.graph_objs as go
 import json
 import pandas as pd
 import os
@@ -12,6 +14,28 @@ class AnnotationDB:
     annotation_db:list = []
     runtime_estimation_model:object = None
 
+    @staticmethod
+    def get_closest_infrastructure(list_of_infra_in_runtime_file):
+        
+        #TODO: load json files
+        #TODO: check those that match with the list in arguments
+        #TODO: 
+
+        # Define two infrastructure configurations with numeric attributes
+        infrastructure1 = {"nodes": 10, "ram": 32, "cpu_power": 8}
+        infrastructure2 = {"nodes": 8, "ram": 32, "cpu_power": 12}
+
+        # Create arrays of attribute values
+        config1_values = np.array([infrastructure1["nodes"], infrastructure1["ram"], infrastructure1["cpu_power"]])
+        config2_values = np.array([infrastructure2["nodes"], infrastructure2["ram"], infrastructure2["cpu_power"]])
+
+        # Calculate the Euclidean distance
+        euclidean_distance = np.sqrt(np.sum((config1_values - config2_values) ** 2))
+
+        print("Euclidean Distance:", euclidean_distance)
+
+        #In this example, we calculate the Euclidean distance based on the numeric attributes (number of nodes, RAM, and CPU power). You can extend this approach to include additional attributes or use other distance measures depending on your specific requirements and the nature of your infrastructure data.
+
 
     @staticmethod
     def create_alignment_runtime_estimation_model(runtime_measured):
@@ -21,6 +45,7 @@ class AnnotationDB:
         aligners = (df_runtime.columns[2:])
 
         infrastructures = df_runtime["infrastructure"].unique()
+        # TODO: call fun to get similarity score
 
         list_models = {}
         for infra in infrastructures: 
@@ -32,10 +57,13 @@ class AnnotationDB:
                 y = df.iloc[:,1].values # response vector: time_used
                 model = LinearRegression(positive=True)
                 model.fit(X, y)
-                #plt.scatter(X, y)
-                #plt.plot(X, model.predict(X)
                 this_infra[aligner] = model
-            #plt.show()
+                
+            #     plt.scatter(X, y, label=aligner)
+            #     plt.plot(X, model.predict(X))
+            # plt.title('Infra: '+ infra)
+            # plt.legend()
+            # plt.show()
             list_models[infra] = this_infra
         return list_models
 
@@ -62,15 +90,14 @@ class AnnotationDB:
 
 
 
-    def __init__    (self, annotation_files_list):
+    def __init__ (self, annotation_files_list):
         
         path_runtimes_align = "./annotation_files/runtime_aligners.csv"
         if( os.path.isfile(path_runtimes_align) == False):
             raise Exception("File missing: "+path_runtimes_align) 
         else:
             with open(path_runtimes_align) as mfile:
-                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model(mfile)  
-                 
+                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model(mfile)          
         path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
             raise Exception("File missing: "+path_runtimes_split) 
@@ -78,8 +105,8 @@ class AnnotationDB:
             with open(path_runtimes_split) as mfile:
                 split_estimators = self.create_split_runtime_estimation_model(mfile)   
         for infra in split_estimators:
-        	self.runtime_estimation_model[infra]["split_merge"] = split_estimators[infra]                          
-        annotation_db = []        
+            self.runtime_estimation_model[infra]["split_merge"] = split_estimators[infra]
+        annotation_db = []
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
                 print(file_path)                
@@ -130,6 +157,8 @@ class ToolAnnotation:
         reference_sizes = []
         ram_used = []
         for resource_requirements in tool_description["resource_requirements_RAM"]:
-            reference_sizes.append(float(resource_requirements["reference_size"]))
-            ram_used.append(float(resource_requirements["RAM"].split("GB")[0])) #in GB
+            RAM_require = resource_requirements["RAM"].split("GB")[0][:-1]
+            ref_size = resource_requirements["reference_size"][:-1]
+            reference_sizes.append(float(ref_size))
+            ram_used.append(float(RAM_require)) #in GB
         self.RAM_requirements_model = self.create_resource_requirements_RAM(reference_sizes, ram_used)
