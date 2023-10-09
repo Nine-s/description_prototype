@@ -2,6 +2,7 @@ from task import Task
 from input import Input_of_DAW
 from infra import Infra
 from Replace import replace_tool
+from Compress import compress_before_file_transfer
 from Split import split
 #import Split
 #import Compress
@@ -101,6 +102,7 @@ class DAW:
             print(task.name)
         #new_daw = split(self, annotationdb)
         # TODO: compress. Here?
+        #new_daw = compress_before_file_transfer()
         # TODO: generate description
         #return new_daw 
         return

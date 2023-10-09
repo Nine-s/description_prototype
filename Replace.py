@@ -10,7 +10,6 @@ def find_alternative_tool(annotation_db, tool_to_replace):
             #find tool that runs with the same input/out as original 
             if ( input_output_matches(tool, tool_to_replace) ):
                 alt_tool_list.append(tool)
-    # return list of mtaching tasks
     return alt_tool_list
 
 

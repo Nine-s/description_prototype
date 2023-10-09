@@ -1,5 +1,6 @@
 
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import normalize
 from scipy.optimize import nnls
 import numpy as np
 from matplotlib import pyplot as plt
@@ -66,6 +67,45 @@ class AnnotationDB:
             # plt.show()
             list_models[infra] = this_infra
         return list_models
+    
+    @staticmethod
+    def create_alignment_runtime_estimation_model_alt(runtime_measured):
+
+        df_runtime = pd.read_csv(runtime_measured, delimiter=",")
+        aligners = (df_runtime.columns[5:])
+        print(aligners)
+
+        infrastructures = df_runtime["infrastructure"].unique()
+        # TODO: call fun to get similarity score
+
+        list_models = {}
+        for aligner in aligners:
+            df = pd.DataFrame({'dataset_size': df_runtime["dataset_size"], 'runtime': df_runtime[aligner], 
+                               "RAM": df_runtime["RAM"], "CPU": df_runtime["CPUMHz"], "ref_size": df_runtime["ref_genome_size"]})
+
+            columns_to_normalize = ['dataset_size', "RAM", "CPU", "ref_size"]
+            X = df[columns_to_normalize]
+            X_normalized = normalize(X)
+            df_normalized = pd.DataFrame(X_normalized, columns=columns_to_normalize)
+            df[columns_to_normalize] = df_normalized
+            print(df)
+
+            X = df[['dataset_size', "RAM", "CPU", "ref_size"]]
+            y = df['runtime']
+
+            model = LinearRegression(positive=True)
+            model.fit(X, y)
+
+            list_models[aligner] = model
+            
+        #     dataset_size = df[["dataset_size"]]
+        #     plt.scatter(dataset_size, y, label=aligner)
+        #     plt.plot(dataset_size, model.predict(X))
+        #     plt.legend()
+        # plt.title('Aligner: '+ aligner)
+        # plt.show()
+        
+        return list_models
 
     @staticmethod
     def create_split_runtime_estimation_model(runtime_measured):
@@ -92,20 +132,20 @@ class AnnotationDB:
 
     def __init__ (self, annotation_files_list):
         
-        path_runtimes_align = "./annotation_files/runtime_aligners.csv"
+        path_runtimes_align = "./annotation_files/runtime_aligners_with_CPU_RAM.csv"
         if( os.path.isfile(path_runtimes_align) == False):
             raise Exception("File missing: "+path_runtimes_align) 
         else:
             with open(path_runtimes_align) as mfile:
-                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model(mfile)          
+                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model_alt(mfile)          
         path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
             raise Exception("File missing: "+path_runtimes_split) 
         else:
             with open(path_runtimes_split) as mfile:
                 split_estimators = self.create_split_runtime_estimation_model(mfile)   
-        for infra in split_estimators:
-            self.runtime_estimation_model[infra]["split_merge"] = split_estimators[infra]
+        #for infra in split_estimators:
+        self.runtime_estimation_model["split_merge"] = split_estimators
         annotation_db = []
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
