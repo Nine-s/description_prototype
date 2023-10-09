@@ -10,7 +10,6 @@ def find_alternative_tool(annotation_db, tool_to_replace):
             #find tool that runs with the same input/out as original 
             if ( input_output_matches(tool, tool_to_replace) ):
                 alt_tool_list.append(tool)
-    # return list of mtaching tasks
     return alt_tool_list
 
 
@@ -38,7 +37,9 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
 
 def choose_best_tool(list_alt_tools, annot, input_of_daw):
     # runtime
-
+    model = annot.runtime_estimation_model
+    best_tool = list_alt_tools[0]
+    best_tool_predicted_runtime =  10000000#
     for tool in list_alt_tools:
         a=1
     # find tool that matches domain specific features
@@ -64,8 +65,8 @@ def create_new_task(task, new_tool, input_description):
 def replace_tool(daw, annotations, input_description, input_of_daw):
 
     for task in daw.tasks:
-        print("++++++")
-        print(task.tool)
+        # print("++++++")
+        # print(task.tool)
         annotation_tools_list = [tool for tool in annotations.annotation_db] 
     
         # find the tool of the DAW task in the annot DB
@@ -81,19 +82,23 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
             print("No alternative found")
             continue
         else:
-            print("Alt tools found!")
-            #print(alternative_tools_list[0].toolname)
+            # print("#### Alt tools found!")
+            # for _tool in alternative_tools_list:
+            #     print(_tool.toolname)
             
             RAM = daw.infra.RAM # TODO: add real values for RAM!
             reference_size = input_of_daw.size_of_reference_genome_max
 
-            #alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
+            alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
 
-            print(alternative_tools_list)
+            # print("#### tools with enough RAM")
+            # for _tool in alternative_tools_list:
+            #     print(_tool.toolname)
+            
             if (len(alternative_tools_list) > 1):
 
-                final_tool = choose_best_tool(alternative_tools_list, annotations.runtime_estimation_model) #TODO
-                final_tool =alternative_tools_list[0]
+                final_tool = choose_best_tool(alternative_tools_list, annotations, input_of_daw) #TODO
+                final_tool = alternative_tools_list[0]
                 new_task = create_new_task(task, final_tool, input_description)
                 task = new_task
             else:

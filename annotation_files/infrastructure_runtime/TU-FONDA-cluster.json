@@ -1,5 +1,4 @@
 {  
-   "bandwidth":"X",
    "nodes": [
 
     {
@@ -19,3 +18,8 @@
     }
  ]
 }
+
+ninon@wally094:~$ lscpu | grep "MHz"
+CPU MHz:             1601.028
+CPU max MHz:         3700.0000
+CPU min MHz:         1600.0000
