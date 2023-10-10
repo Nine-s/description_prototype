@@ -23,7 +23,7 @@ class DAW:
         for task in tasks_list:
             task_name_list.append(task.name)
         for task in tasks_list:            
-            for input in task.require_input_from:                 
+            for input in task.require_input_from:   
                 if (".out_channel." in input):
                     dependency_name = input.split(".out")[0]
                     #if dependency name is in task list
@@ -75,7 +75,10 @@ class DAW:
             index = ordered_tasks_list.index(task_name)
             tasks_priority.append(index)
         return tasks_priority
-
+        
+    def insert_tasks(self, new_tasks):
+        self.tasks.append(new_tasks)
+        self.tasks_priority = self.define_tasks_priority()
     
     # Creates a DAW object from the description 
 
@@ -100,7 +103,7 @@ class DAW:
         new_daw = replace_tool(self, annotationdb, input_description, self.input)
         for task in new_daw.tasks:
             print(task.name)
-        #new_daw = split(self, annotationdb)
+        new_daw = split(new_daw, annotationdb)
         # TODO: compress. Here?
         #new_daw = compress_before_file_transfer()
         # TODO: generate description

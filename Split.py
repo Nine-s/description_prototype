@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import re
+from task import Task
 
 #returns a degree of parallelism from which splitting is reducing runtime
 def min_beneficial_split(alignment_task, median_input_size, annotation_database, infra_name):
@@ -27,10 +28,15 @@ def min_beneficial_split(alignment_task, median_input_size, annotation_database,
     return min_split * (min_split > 0)
 
 
-def split(DAW, annotation_database):
-
-    alignment_task = next(task for task in DAW.tasks if task.operation == "align")
-    annotation_aligner = next(aligner for aligner in annotation_database.annotation_db if aligner.toolname == alignment_task.tool)
+def split(DAW, annotation_database, input_description):
+    try:
+        alignment_task = next(task for task in DAW.tasks if task.operation == "align")
+        annotation_aligner = next(aligner for aligner in annotation_database.annotation_db if aligner.toolname == alignment_task.tool)
+        
+    except StopIteration:
+        print("Either no task with operation \"align\" was found, or there was no annotation for the alignment tool used.")
+        return DAW
+        
     if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
         return DAW
     
@@ -48,24 +54,36 @@ def split(DAW, annotation_database):
     while task_splittable == True:
         output_last_split_task = re.compile(last_split_task.name + ".out_channel.*")
         next_tasks = [task for task in DAW.tasks if [requirement for requirement in task.require_input_from if output_last_split_task.match(requirement)] != []]
-        if next_tasks != []:
-            try:    
-                for task in next_tasks:
-                    annotation_next_task = next(annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool)
+        if next_tasks != []:    
+            for task in next_tasks:
+                annotation_next_task = [annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool]
+                if annotation_next_task != []:
                     if annotation_next_task.is_splittable == True:
                         last_split_task = next_task 
                         task_splittable = True
-                        continue               
-            except StopIteration: #no annotation for next task found
-                task_splittable = False
+                        continue              
+                    else:
+                        task_splittable = False 
+                else: 
+                    task_splittable = False
         else: #no next task found
-            task_splittable = False
+            task_splittable = False       
+    #TODO: find children of last splittable task
+    output_last_split_task = last_split_task.name + ".out_channel." + last_split_task.outputs[0]
+    child_tasks = [task for task in DAW.tasks if output_last_split_task in task.require_input_from]
 
-    	
-    	
-    	
-    DAW = DAW #TODO: implement changes in DAW object
-
+    read_input_align_tool = next(input for input in first_split_task.inputs if input.input_type == "sample")
+    read_input_from_DAW = first_split_task.inputs_from_DAW[first_split_task.inputs.index(read_input_align_tool)]
+    split_parameter = split_number #TODO: add split param as global workflow parameter
+    split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
+    split_task_output = split_task.name + ".out_channel." + split_task.outputs[0]
+    first_split_task.change_input(split_task_output, read_input_align_tool)
+    DAW.insert_tasks(split_task)
+    merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", "/home/ninon/modules/samtools_merge.nf", input_description)
+    merge_task_output = merge_task.name + ".out_channel." + merge_task.outputs[0]
+    for child_task in child_tasks:
+        child_task.change_input(merge_task_output, output_last_split_task)
+    DAW.insert_tasks(merge_task)
     
     return DAW
     
