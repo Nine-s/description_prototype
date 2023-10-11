@@ -68,7 +68,7 @@ def split(DAW, annotation_database, input_description):
                     task_splittable = False
         else: #no next task found
             task_splittable = False       
-    #TODO: find children of last splittable task
+
     output_last_split_task = last_split_task.name + ".out_channel." + last_split_task.outputs[0]
     child_tasks = [task for task in DAW.tasks if output_last_split_task in task.require_input_from]
 
