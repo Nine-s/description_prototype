@@ -47,7 +47,6 @@ class AnnotationDB:
 
         infrastructures = df_runtime["infrastructure"].unique()
         # TODO: call fun to get similarity score
-
         list_models = {}
         for infra in infrastructures: 
             df_infra = df_runtime.loc[df_runtime["infrastructure"] == infra]
@@ -77,7 +76,7 @@ class AnnotationDB:
 
         infrastructures = df_runtime["infrastructure"].unique()
         # TODO: call fun to get similarity score
-
+        	
         list_models = {}
         for aligner in aligners:
             df = pd.DataFrame({'dataset_size': df_runtime["dataset_size"], 'runtime': df_runtime[aligner], 
@@ -94,7 +93,7 @@ class AnnotationDB:
             y = df['runtime']
 
             model = LinearRegression(positive=True)
-            model.fit(X, y)
+            model.fit(X.values, y)
 
             list_models[aligner] = model
             
@@ -137,7 +136,7 @@ class AnnotationDB:
             raise Exception("File missing: "+path_runtimes_align) 
         else:
             with open(path_runtimes_align) as mfile:
-                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model_alt(mfile)          
+                self.runtime_estimation_model = self.create_alignment_runtime_estimation_model_alt(mfile)  
         path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
             raise Exception("File missing: "+path_runtimes_split) 
