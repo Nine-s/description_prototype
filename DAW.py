@@ -104,7 +104,6 @@ class DAW:
         for task in new_daw.tasks:
             print(task.name)
         new_daw = split(new_daw, annotationdb)
-        # TODO: compress. Here?
         #new_daw = compress_before_file_transfer()
         # TODO: generate description
         #return new_daw 

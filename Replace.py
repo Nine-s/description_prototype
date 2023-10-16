@@ -1,4 +1,6 @@
 from task import Task
+import pandas as pd
+from sklearn.preprocessing import PolynomialFeatures
 
 def find_alternative_tool(annotation_db, tool_to_replace):
     alt_tool_list = []
@@ -37,12 +39,22 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
 
 def choose_best_tool(list_alt_tools, annot, input_of_daw):
     # runtime
-    model = annot.runtime_estimation_model
-    best_tool = list_alt_tools[0]
-    best_tool_predicted_runtime =  10000000#
+    scaler = annot.sandardscaler
+    input_for_prediction = pd.DataFrame({'dataset_size': [(48)],
+                                    'RAM': [(251)], 
+                                    'CPUMHz': [(3400.0000)], 
+                                    'ref_genome_size': [(0.137)] })
+    poly = PolynomialFeatures(degree=2)
+    normalized_new_data = scaler.transform(input_for_prediction)
+    new_data_point_poly = poly.fit_transform(input_for_prediction)
+    #new_data_point_poly = poly.transform(normalized_new_data)
+    list_predicted_runtimes = []
     for tool in list_alt_tools:
-        a=1
-    # find tool that matches domain specific features
+        print(tool)
+        print(annot.runtime_estimation_model)
+        model = annot.runtime_estimation_model[tool]
+        predicted_runtime = model.predict(new_data_point_poly)
+        list_predicted_runtimes.append
     return
 
 def create_new_task(task, new_tool, input_description):
