@@ -49,12 +49,12 @@ def choose_best_tool(list_alt_tools, annot, input_of_daw):
     new_data_point_poly = poly.fit_transform(input_for_prediction)
     #new_data_point_poly = poly.transform(normalized_new_data)
     list_predicted_runtimes = []
-    for tool in list_alt_tools:
-        print(tool)
-        print(annot.runtime_estimation_model)
-        model = annot.runtime_estimation_model[tool]
-        predicted_runtime = model.predict(new_data_point_poly)
-        list_predicted_runtimes.append
+    # for tool in list_alt_tools:
+    #     print(tool)
+    #     print(annot.runtime_estimation_model)
+    #     model = annot.runtime_estimation_model[tool]
+    #     predicted_runtime = model.predict(new_data_point_poly)
+    #     list_predicted_runtimes.append
     return
 
 def create_new_task(task, new_tool, input_description):

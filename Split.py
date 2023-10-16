@@ -4,18 +4,17 @@ import re
 from task import Task
 
 #returns a degree of parallelism from which splitting is reducing runtime
-def min_beneficial_split(alignment_task, median_input_size, annotation_database, infra_name):
-    align_model = annotation_database.runtime_estimation_model[infra_name][alignment_task.tool] 
+def min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size):
+    align_model = annotation_database.runtime_estimation_model[alignment_task.tool] 
     align_model_weight = align_model.coef_[0]
     align_model_bias = align_model.intercept_
-    
-    split_model = annotation_database.runtime_estimation_model[infra_name]["split_merge"]
+    split_model = annotation_database.runtime_estimation_model["split_merge"][infra_name]
 
     #estimate time it takes to split
     split_time = split_model[0] * median_input_size + split_model[1]
       
     #estimate alignment runtime without splitting
-    align_time_no_split = align_model.predict(median_input_size.reshape(-1, 1))[0]
+    align_time_no_split = align_model.predict(np.array([median_input_size, ram, cpu, ref_size]).reshape(1,-1))
     
     #max alignment runtime after splitting to reduce runtime overall
     max_align_time_split = align_time_no_split - split_time
@@ -32,7 +31,6 @@ def split(DAW, annotation_database, input_description):
     try:
         alignment_task = next(task for task in DAW.tasks if task.operation == "align")
         annotation_aligner = next(aligner for aligner in annotation_database.annotation_db if aligner.toolname == alignment_task.tool)
-        
     except StopIteration:
         print("Either no task with operation \"align\" was found, or there was no annotation for the alignment tool used.")
         return DAW
@@ -41,9 +39,12 @@ def split(DAW, annotation_database, input_description):
         return DAW
     
     median_input_size = np.array(0.4) #TODO: get real median input size, so far input obj of DAW is empty
-    infra_name = "kubernetes-cluster" #TODO: infra may need an identifier to get corresponding entries from the annotation database?
+    infra_name = "TU-FONDA-cluster" #TODO: infra may need an identifier to get corresponding entries from the annotation database?
+    ram = 200
+    cpu = 3000
+    ref_size = 0.5
     
-    min_beneficial_split(alignment_task, median_input_size, annotation_database, infra_name)
+    min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size)
     split_number = min_beneficial_split #TODO: implement real approach for getting number of chunks here
     
     #find splittable tasks, first is align
@@ -68,7 +69,7 @@ def split(DAW, annotation_database, input_description):
                     task_splittable = False
         else: #no next task found
             task_splittable = False       
-    #TODO: find children of last splittable task
+
     output_last_split_task = last_split_task.name + ".out_channel." + last_split_task.outputs[0]
     child_tasks = [task for task in DAW.tasks if output_last_split_task in task.require_input_from]
 
