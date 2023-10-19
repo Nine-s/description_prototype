@@ -47,15 +47,23 @@ def choose_best_tool(list_alt_tools, annot, input_of_daw):
     poly = PolynomialFeatures(degree=2)
     normalized_new_data = scaler.transform(input_for_prediction)
     new_data_point_poly = poly.fit_transform(input_for_prediction)
-    #new_data_point_poly = poly.transform(normalized_new_data)
+    new_data_point_poly = poly.transform(normalized_new_data)
     list_predicted_runtimes = []
-    # for tool in list_alt_tools:
-    #     print(tool)
-    #     print(annot.runtime_estimation_model)
-    #     model = annot.runtime_estimation_model[tool]
-    #     predicted_runtime = model.predict(new_data_point_poly)
-    #     list_predicted_runtimes.append
-    return
+    list_tools = []
+    for tool in list_alt_tools:
+        # print(tool.toolname)
+        # print(annot.runtime_estimation_models)
+        # print(list(annot.runtime_estimation_models.keys()))
+        if tool.toolname in annot.runtime_estimation_models:
+            model = annot.runtime_estimation_models[tool.toolname]
+        predicted_runtime = model.predict(new_data_point_poly)
+        list_predicted_runtimes.append(predicted_runtime)
+        list_tools.append(tool)
+    min_number = min(list_predicted_runtimes)
+    min_index = list_predicted_runtimes.index(min_number)
+    best_tool = list_tools[min_index]
+    print(best_tool.toolname)
+    return best_tool
 
 def create_new_task(task, new_tool, input_description):
     print(task)
@@ -110,9 +118,11 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
             if (len(alternative_tools_list) > 1):
 
                 final_tool = choose_best_tool(alternative_tools_list, annotations, input_of_daw) #TODO
-                final_tool = alternative_tools_list[0]
+                #final_tool = alternative_tools_list[0]
                 new_task = create_new_task(task, final_tool, input_description)
                 task = new_task
+                #task.my_print()
             else:
                 continue
+    #print(daw)
     return daw

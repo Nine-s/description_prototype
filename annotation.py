@@ -173,7 +173,7 @@ class AnnotationDB:
         else:
             with open(path_runtimes_align) as mfile:
                 runtime_model = self.create_alignment_runtime_estimation_model_alt(mfile)          
-                self.runtime_estimation_model = runtime_model[0]
+                self.runtime_estimation_models = runtime_model[0]
                 self.sandardscaler = runtime_model[1]
         path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
@@ -182,6 +182,7 @@ class AnnotationDB:
             with open(path_runtimes_split) as mfile:
                 split_estimators = self.create_split_runtime_estimation_model(mfile)   
         #for infra in split_estimators:
+        self.runtime_estimation_model = {}
         self.runtime_estimation_model["split_merge"], self.norm_train_data = split_estimators
         annotation_db = []
         for file_path in annotation_files_list:
