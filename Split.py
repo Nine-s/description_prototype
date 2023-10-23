@@ -43,9 +43,10 @@ def split(DAW, annotation_database, input_description):
     ram = 200
     cpu = 3000
     ref_size = 0.5
-    
-    min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size)
-    split_number = min_beneficial_split #TODO: implement real approach for getting number of chunks here
+    #min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size)
+    split_number = 2 #TODO: implement real approach for getting number of chunks here
+    DAW.wf_level_params.append(("split", split_number))
+
     
     #find splittable tasks, first is align
     first_split_task = alignment_task

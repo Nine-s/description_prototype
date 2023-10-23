@@ -56,19 +56,24 @@ class to_nextflow:
         #read default manifest in resources folder
         with open("./resources/default_nextflow_config.config") as f:
             base_config = f.read()
-        with open("nextflow.config", "w"):
-            pass
+#        with open("nextflow.config", "w"):
+#            pass
         params_string = "\n\nparams {\n"
-        params_string += "outdir = 'results'\n"
-        params_string += "csv_input = ./input.csv \n"
+        params_string += "\toutdir = 'results'\n"
+        params_string += "\tcsv_input = './input.csv'\n"
         for i in range(len(self.DAW.tasks)):
             task_inputs = self.DAW.tasks[i].inputs
             for j in range(len(task_inputs)):
                 _input = task_inputs[j]
                 if ("reference" in _input.input_type):
-                    params_string += _input.ref_type + " = '" + _input.paths[0] + "'\n"  
-        with open('generated_workflow/nextflow.config', 'a') as config_file:
+                    params_string += "\t" + _input.ref_type + " = '" + _input.paths[0] + "'\n"  
+        for additional_param in self.DAW.wf_level_params:
+        	param, value = additional_param
+        	params_string += "\t" + param + " = " + str(value) + "\n"
+        params_string += "}\n"
+        with open('./generated_workflow/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)
+            config_file.close()
         #TODO: add threads #params_string += ("threads = " + str(self.DAW.infra.threads) + "\n") 
     
     
