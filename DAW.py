@@ -14,6 +14,7 @@ class DAW:
     is_scatter_gather:bool = False
     input:Input_of_DAW = None
     infra:Infra = None
+    wf_level_params:list = []
 
     @staticmethod
     def build_dict_from_dependencies(tasks_list):
@@ -103,7 +104,7 @@ class DAW:
         new_daw = replace_tool(self, annotationdb, input_description, self.input)
         for task in new_daw.tasks:
             print(task.name)
-        #new_daw = split(new_daw, annotationdb, input_description)
+        new_daw = split(new_daw, annotationdb, input_description)
         # TODO: compress.
         if (self.infra.is_cluster == True):
            new_daw = compress_before_file_transfer(self, input_description)
