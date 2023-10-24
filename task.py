@@ -37,15 +37,15 @@ class Task:
 
     def change_input(self, new_input, old_input):
         if isinstance(old_input, Input): 
-    	    old_input_position = self.inputs.index(old_input)
-    	    self.inputs.pop(old_input_position)
+            old_input_position = self.inputs.index(old_input)
+            self.inputs.pop(old_input_position)
         elif isinstance(old_input, str) and ".out" in old_input:
             self.require_input_from.remove(old_input)
             old_input_position = self.inputs_task.index(old_input)
         self.inputs_task[old_input_position] = new_input
         if isinstance(new_input, str) and ".out" in new_input and new_input not in self.require_input_from:
-    	    self.require_input_from.append(new_input)
-    	
+            self.require_input_from.append(new_input)
+    
     def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
         self.name:str = name
         self.tool:str = tool
@@ -55,6 +55,7 @@ class Task:
         self.module_name:str = module_name
         self.module_path:str = module_path
         self.inputs_from_DAW = inputs_from_DAW
+        self.input_description = input_description
         inputs = self.create_input(inputs_from_DAW, input_description)
         self.inputs = inputs
         self.inputs_task:list = inputs_from_DAW

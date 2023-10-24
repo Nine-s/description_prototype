@@ -80,11 +80,11 @@ def split(DAW, annotation_database, input_description):
     split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
     split_task_output = split_task.name + ".out_channel." + split_task.outputs[0]
     first_split_task.change_input(split_task_output, read_input_align_tool)
-    DAW.insert_tasks(split_task)
+    DAW.insert_tasks(split_task) for child_task in child_tasks:
+        child_task.change_input(merge_task_output, output_last_split_task)
     merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", "/home/ninon/modules/samtools_merge.nf", input_description)
     merge_task_output = merge_task.name + ".out_channel." + merge_task.outputs[0]
-    for child_task in child_tasks:
-        child_task.change_input(merge_task_output, output_last_split_task)
+    
     DAW.insert_tasks(merge_task)
     
     return DAW
