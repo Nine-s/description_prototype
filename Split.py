@@ -1,30 +1,63 @@
+from task import Task
 import numpy as np
 import math
 import re
-from task import Task
+import pandas as pd
+import statistics
+from sklearn.preprocessing import PolynomialFeatures
+
+
 
 #returns a degree of parallelism from which splitting is reducing runtime
-def min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size):
-    align_model = annotation_database.runtime_estimation_model[alignment_task.tool] 
-    align_model_weight = align_model.coef_[0]
-    align_model_bias = align_model.intercept_
-    split_model = annotation_database.runtime_estimation_model["split_merge"][infra_name]
+def min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size):
+    poly = PolynomialFeatures(degree=2)
+    align_scaler = annotation_database.sandardscaler
+    align_model = annotation_database.runtime_estimation_models[alignment_task.tool] 
+    
+    wf_characteristics = pd.DataFrame({'dataset_size': [(median_input_size)],
+                                    'RAM': [(ram)], 
+                                    'CPUMHz': [(cpu)], 
+                                    'ref_genome_size': [(ref_size)] })
 
-    #estimate time it takes to split
-    split_time = split_model[0] * median_input_size + split_model[1]
-      
-    #estimate alignment runtime without splitting
-    align_time_no_split = align_model.predict(np.array([median_input_size, ram, cpu, ref_size]).reshape(1,-1))
+    normalized_wf_characteristics = align_scaler.transform(wf_characteristics)
+    wf_characteristics_poly = poly.fit_transform(wf_characteristics)
+    wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
+    
+    align_time_no_split = align_model.predict(wf_characteristics_poly)
+
+    
+    split_model = annotation_database.runtime_estimation_models["split_merge"]
+    split_scaler = annotation_database.split_merge_scaler
+    
+    normalized_wf_characteristics = split_scaler.transform(wf_characteristics)
+    wf_characteristics_poly = poly.fit_transform(wf_characteristics)
+    wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
+    
+    split_time = split_model.predict(wf_characteristics_poly)
+
     
     #max alignment runtime after splitting to reduce runtime overall
     max_align_time_split = align_time_no_split - split_time
     
-    #get input datasize for max alignment runtime after splitting and calculate min split parameter
-    max_input_size_split = (max_align_time_split - align_model_bias)/align_model_weight
-    min_split = math.ceil(median_input_size/max_input_size_split)
-
+    #search for split param from where predicted alignment time is beneficial considering the newly added split time
+    for i in range(1,100):
+        input_size_chunked = median_input_size/i
+        updated_wf_characteristics = pd.DataFrame({'dataset_size': [(input_size_chunked)],
+                                    'RAM': [(ram)], 
+                                    'CPUMHz': [(cpu)], 
+                                    'ref_genome_size': [(ref_size)] })
+        normalized_wf_characteristics = align_scaler.transform(updated_wf_characteristics)
+        wf_characteristics_poly = poly.fit_transform(updated_wf_characteristics)
+        wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
+    
+        align_time_chunked = align_model.predict(wf_characteristics_poly)
+        if(align_time_chunked < max_align_time_split):
+            return i 
+            
+    return 0
+    
+    
     #return ReLU of min_split, when min_split is negative, splitting increases runtime
-    return min_split * (min_split > 0)
 
 
 def split(DAW, annotation_database, input_description):
@@ -37,15 +70,23 @@ def split(DAW, annotation_database, input_description):
         
     if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
         return DAW
+
+    median_input_size = statistics.median(DAW.input.size_of_samples)
+    ram = DAW.infra.RAM
+    cpus = [node.cpu for node in DAW.infra.list_nodes]
+    for i, element in enumerate(cpus):
+        cpus[i] = int(element.replace("m",""))
+    cpu = statistics.median(cpus)
+    ref_size = DAW.input.size_of_reference_genome_max
     
-    median_input_size = np.array(0.4) #TODO: get real median input size, so far input obj of DAW is empty
-    infra_name = "TU-FONDA-cluster" #TODO: infra may need an identifier to get corresponding entries from the annotation database?
-    ram = 200
-    cpu = 3000
-    ref_size = 0.5
-    #min_beneficial_split(alignment_task, annotation_database, infra_name, median_input_size, ram, cpu, ref_size)
-    split_number = 2 #TODO: implement real approach for getting number of chunks here
+    min_split = min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size)
+    if(DAW.infra.number_nodes<min_split):
+        return DAW
+    split_number = DAW.infra.number_nodes
     DAW.wf_level_params.append(("split", split_number))
+    cores = [int(node.cores) for node in DAW.infra.list_nodes] 
+    thread_number = int(statistics.median(cores))
+    DAW.wf_level_params.append(("threads", thread_number))
 
     
     #find splittable tasks, first is align
@@ -80,11 +121,11 @@ def split(DAW, annotation_database, input_description):
     split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
     split_task_output = split_task.name + ".out_channel." + split_task.outputs[0]
     first_split_task.change_input(split_task_output, read_input_align_tool)
-    DAW.insert_tasks(split_task) for child_task in child_tasks:
-        child_task.change_input(merge_task_output, output_last_split_task)
+    DAW.insert_tasks(split_task) 
     merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", "/home/ninon/modules/samtools_merge.nf", input_description)
     merge_task_output = merge_task.name + ".out_channel." + merge_task.outputs[0]
-    
+    for child_task in child_tasks:
+        child_task.change_input(merge_task_output, output_last_split_task)
     DAW.insert_tasks(merge_task)
     
     return DAW
