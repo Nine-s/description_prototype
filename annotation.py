@@ -14,14 +14,15 @@ from scipy.optimize import nnls
 class AnnotationDB:  
 
     annotation_db:list = []
-    runtime_estimation_model:object = None
-    norm_train_data:dict = None
+    runtime_estimation_models:object = None
+
 
     
     @staticmethod
     def create_alignment_runtime_estimation_model_alt(runtime_measured):
 
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
+
         aligners = (df_runtime.columns[5:])
         #print(aligners)
 
@@ -139,30 +140,31 @@ class AnnotationDB:
         #     plt.legend()
         # plt.title('Aligner: '+ aligner)
         # plt.show()
-        
+
         return [list_models, scaler]
 
     @staticmethod
     def create_split_runtime_estimation_model(runtime_measured):
 
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
+        columns_to_normalize = ['dataset_size', "RAM", "CPUMHz", "ref_genome_size"]
+        X = df_runtime[columns_to_normalize]
 
-        infrastructures = df_runtime["infrastructure"].unique()
+        scaler = StandardScaler()
+        X_normalized = scaler.fit_transform(X)
 
-        list_models = {}
-        for infra in infrastructures: 
-            df_infra = df_runtime.loc[df_runtime["infrastructure"] == infra]
-            df = pd.DataFrame({'reference_sizes': df_infra["dataset_size"], 'runtime': df_infra["duration"] })
-            X = df.iloc[:,:-1].values # feature matrix: reference_sizes
-            y = df.iloc[:,1].values # response vector: time_used
-            
-            #use nnls for non-negative weights
-            model = nnls(X, y)
-            model = (model[0][0], model[1])
-            
-            list_models[infra] = model
-        return list_models
+        df_normalized = pd.DataFrame(X_normalized, columns=columns_to_normalize)
+        df_runtime[columns_to_normalize] = df_normalized
+        #print(df_runtime)
 
+        X = df_runtime[['dataset_size', "RAM", "CPUMHz", "ref_genome_size"]]
+        y = df_runtime['duration']
+
+        poly = PolynomialFeatures(degree=2)
+        X_poly = poly.fit_transform(X)
+        model = LinearRegression()
+        model.fit(X_poly, y)
+        return model, scaler
 
 
     def __init__ (self, annotation_files_list):
@@ -182,8 +184,7 @@ class AnnotationDB:
             with open(path_runtimes_split) as mfile:
                 split_estimators = self.create_split_runtime_estimation_model(mfile)   
         #for infra in split_estimators:
-        self.runtime_estimation_model = {}
-        self.runtime_estimation_model["split_merge"], self.norm_train_data = split_estimators
+        self.runtime_estimation_models["split_merge"], self.split_merge_scaler = split_estimators
         annotation_db = []
         for file_path in annotation_files_list:
             with open(file_path) as json_file:
