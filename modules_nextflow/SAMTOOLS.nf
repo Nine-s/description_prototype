@@ -1,4 +1,4 @@
-process SAMTOOLS {
+process SAMTOOLS_SORT_CONVERT {
     label 'samtools'
     publishDir params.outdir
     

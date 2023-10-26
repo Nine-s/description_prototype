@@ -1,0 +1,55 @@
+Oct-25 11:03:10.276 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf -c nextflow.config
+Oct-25 11:03:10.427 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 22.05.0-edge
+Oct-25 11:03:10.458 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/ninon/description_prototype/v1/generated_workflow/nextflow.config
+Oct-25 11:03:10.464 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/ninon/description_prototype/v1/generated_workflow/nextflow.config
+Oct-25 11:03:10.464 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ninon/description_prototype/v1/generated_workflow/nextflow.config
+Oct-25 11:03:10.465 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ninon/description_prototype/v1/generated_workflow/nextflow.config
+Oct-25 11:03:10.501 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Oct-25 11:03:11.538 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Oct-25 11:03:11.585 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declararion
+Oct-25 11:03:11.616 [main] INFO  nextflow.cli.CmdRun - Launching `main.nf` [cranky_montalcini] DSL2 - revision: 13ce456b8c
+Oct-25 11:03:11.639 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/ninon/.nextflow/plugins; core-plugins: nf-amazon@1.8.0,nf-azure@0.13.2,nf-console@1.0.3,nf-ga4gh@1.0.3,nf-google@1.2.0,nf-sqldb@0.4.1,nf-tower@1.4.0
+Oct-25 11:03:11.641 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Oct-25 11:03:11.677 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Oct-25 11:03:11.679 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Oct-25 11:03:11.685 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Oct-25 11:03:11.702 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Oct-25 11:03:11.805 [main] DEBUG nextflow.Session - Session uuid: ce4a3ef3-0911-4450-baba-9c5c1f9d3fb5
+Oct-25 11:03:11.805 [main] DEBUG nextflow.Session - Run name: cranky_montalcini
+Oct-25 11:03:11.806 [main] DEBUG nextflow.Session - Executor pool size: 4
+Oct-25 11:03:11.861 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 22.05.0-edge build 5704
+  Created: 25-05-2022 17:39 UTC (19:39 CEST)
+  System: Linux 5.4.0-150-generic
+  Runtime: Groovy 3.0.10 on OpenJDK 64-Bit Server VM 17.0.7+7-Ubuntu-0ubuntu118.04
+  Encoding: UTF-8 (ISO-8859-1)
+  Process: 11407@helga [127.0.1.1]
+  CPUs: 4 - Mem: 7.2 GB (160.9 MB) - Swap: 7.4 GB (5.8 MB)
+Oct-25 11:03:11.893 [main] DEBUG nextflow.Session - Work-dir: /home/ninon/description_prototype/v1/generated_workflow/work [ext2/ext3]
+Oct-25 11:03:11.894 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/ninon/description_prototype/v1/generated_workflow/bin
+Oct-25 11:03:11.911 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Oct-25 11:03:11.931 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Oct-25 11:03:12.007 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Oct-25 11:03:12.027 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 5; maxThreads: 1000
+Oct-25 11:03:12.136 [main] DEBUG nextflow.Session - Session start invoked
+Oct-25 11:03:12.142 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /home/ninon/description_prototype/v1/generated_workflow/_trace_RS1_D1_star_droso
+Oct-25 11:03:12.521 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Oct-25 11:03:13.021 [main] DEBUG nextflow.Session - Session aborted -- Cause: Cannot find a component with name 'SAMTOOLS_SORT_CONVERT' in module: /home/ninon/description_prototype/v1/modules_nextflow/SAMTOOLS.nf
+Oct-25 11:03:13.035 [main] ERROR nextflow.cli.Launcher - @unknown
+nextflow.exception.MissingModuleComponentException: Cannot find a component with name 'SAMTOOLS_SORT_CONVERT' in module: /home/ninon/description_prototype/v1/modules_nextflow/SAMTOOLS.nf
+	at nextflow.script.ScriptMeta.addModule(ScriptMeta.groovy:264)
+	at nextflow.script.ScriptMeta.addModule(ScriptMeta.groovy:255)
+	at nextflow.script.IncludeDef.load0(IncludeDef.groovy:126)
+	at nextflow.script.IncludeDef$load0$1.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:139)
+	at Script_e7703f6d.runScript(Script_e7703f6d:5)
+	at nextflow.script.BaseScript.runDsl2(BaseScript.groovy:170)
+	at nextflow.script.BaseScript.run(BaseScript.groovy:217)
+	at nextflow.script.ScriptParser.runScript(ScriptParser.groovy:220)
+	at nextflow.script.ScriptRunner.run(ScriptRunner.groovy:212)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:120)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:337)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:640)

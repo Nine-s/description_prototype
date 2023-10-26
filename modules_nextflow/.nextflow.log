@@ -1,0 +1,9 @@
+Oct-25 11:00:19.853 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf -c nextflow.config
+Oct-25 11:00:19.946 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 22.05.0-edge
+Oct-25 11:00:19.985 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/ninon/.nextflow/scm
+Oct-25 11:00:20.033 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+nextflow.exception.AbortOperationException: Cannot find script file: main.nf
+	at nextflow.cli.CmdRun.getScriptFile(CmdRun.groovy:421)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:287)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:640)

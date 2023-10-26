@@ -52,6 +52,7 @@ class Input_of_DAW:
     sizes_of_samples:list = []
     input_samples:list = []
     input_references:list = []
+    first_strand = "foward"
     size_of_reference_genome_max:int = 0 #TODO: consider metagenomics: add a condition to take the max number?
 
     def __init__(self, input_description):
@@ -62,7 +63,8 @@ class Input_of_DAW:
         
         for sample in input_description["samples"]:
             mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
-            _input_samples.append(mInput)     
+            _input_samples.append(mInput) 
+            self.first_strand = mInput.strand    
             _size_of_samples.append(float(sample["uncompressed_size"]))
                 
         for reference in input_description["references"]:

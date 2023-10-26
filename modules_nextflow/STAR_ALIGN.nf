@@ -4,7 +4,6 @@ process STAR_ALIGN {
     publishDir params.outdir
 
     input:
-    env STRANDNESS
     tuple val(sample_name), path(reads)
     path(index)
     path(annotation)
@@ -14,7 +13,7 @@ process STAR_ALIGN {
 
     shell:
     '''
-    if [[ (params.strandness == "firststrand") || ($STRANDNESS == "secondstrand") ]]; then
+    if [[ (params.strandness == "firststrand") || (params.strandedness == "secondstrand") ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\
@@ -24,7 +23,7 @@ process STAR_ALIGN {
 			--alignSoftClipAtReferenceEnds No \\
 			--outFilterIntronMotifs RemoveNoncanonical \\
 			--outSAMattrIHstart 0
-	elif [[ $STRANDNESS == "unstranded" ]]; then
+	elif [[ params.strandedness == "unstranded" ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\
@@ -36,7 +35,7 @@ process STAR_ALIGN {
         	--sjdbGTFfile !{annotation} \\
 			--outSAMattrIHstart 0
 	else  
-		echo $STRANDNESS > error_strandness.txt
+		echo params.strandedness > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt
 	fi
    '''

@@ -15,12 +15,12 @@ class to_nextflow:
 
     def write_core_workflow(self):
         core = "\n"
+        # declare strandedness env variable
         tasks = self.DAW.tasks
         for i in range(len(tasks)):
             priority_index = self.DAW.tasks_priority.index(i)
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
-            #TODO: remove to justuse one input
             for my_input in tmp_task.inputs_task:
                 if((".out" not in my_input) and (my_input != "reads")):
                     tmp += "params." + my_input + ", "
@@ -44,7 +44,7 @@ class to_nextflow:
             module_names_string = ""
             for module_name in include_dictionnary[path]:
                 module_names_string += module_name + " ; "
-            include = "include { " + module_names_string[:-2] + " } from " + path + "\n"
+            include = "include { " + module_names_string[:-2] + " } from '" + path + "'\n"
             include_string = include_string + include
         return include_string    
 
@@ -59,6 +59,7 @@ class to_nextflow:
 #        with open("nextflow.config", "w"):
 #            pass
         params_string = "\n\nparams {\n"
+        params_string += "\tstrand = " + "'" + self.DAW.input.first_strand + "'\n"
         params_string += "\toutdir = 'results'\n"
         params_string += "\tcsv_input = './input.csv'\n"
         for i in range(len(self.DAW.tasks)):
@@ -68,8 +69,8 @@ class to_nextflow:
                 if ("reference" in _input.input_type):
                     params_string += "\t" + _input.ref_type + " = '" + _input.paths[0] + "'\n"  
         for additional_param in self.DAW.wf_level_params:
-        	param, value = additional_param
-        	params_string += "\t" + param + " = " + str(value) + "\n"
+            param, value = additional_param
+            params_string += "\t" + param + " = " + str(value) + "\n"
         params_string += "}\n"
         with open('./generated_workflow/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)
