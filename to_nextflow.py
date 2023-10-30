@@ -1,19 +1,23 @@
+import pandas as pd
+
 class to_nextflow:  
 
     DAW = None
 
-    def write_workflow(self):
+    def write_workflow(self, input_tasks_list):
         start = """\nworkflow{
         read_pairs_ch = Channel
-            .fromPath( 'params.input_csv' )
-            .splitCsv(header: true, sep: '\t')
-            .map {row -> tuple(row.sampleName, [row.fastq1, row.fastq2], row.strand)}
+            .fromPath( params.csv_input )
+            .splitCsv(header: true, sep: ',')
+            .map {row -> tuple(row.sample, [row.path_r1, row.path_r2])}
+            .view()
         """
+        #.map {row -> tuple(row.sampleName, [row.fastq1, row.fastq2], row.strand)}
         end = "\n}"
-        core = self.write_core_workflow()
+        core = self.write_core_workflow(input_tasks_list)
         return start + core + end
 
-    def write_core_workflow(self):
+    def write_core_workflow(self, input_tasks_list):
         core = "\n"
         # declare strandedness env variable
         tasks = self.DAW.tasks
@@ -22,10 +26,19 @@ class to_nextflow:
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
             for my_input in tmp_task.inputs_task:
-                if((".out" not in my_input) and (my_input != "reads")):
+                print("####")
+                print(my_input)
+                print(input_tasks_list)
+                print("#######")
+                if((".out" not in my_input) and (my_input in input_tasks_list)): 
+                        tmp += "read_pairs_ch, "       
+                elif((".out" not in my_input) and (my_input != "reads")):
                     tmp += "params." + my_input + ", "
+                    
                 else: 
-                    tmp += my_input + ", "
+                    tmp_input = my_input
+                    tmp_input = tmp_input.replace("out_channel", "out")
+                    tmp += tmp_input + ", "
             tmp = tmp[:-2] + ")\n"
             core += tmp
         return core
@@ -50,6 +63,7 @@ class to_nextflow:
 
 
     def write_docker_per_task(self):
+
         return
 
     def create_config_file(self):
@@ -67,27 +81,39 @@ class to_nextflow:
             for j in range(len(task_inputs)):
                 _input = task_inputs[j]
                 if ("reference" in _input.input_type):
-                    params_string += "\t" + _input.ref_type + " = '" + _input.paths[0] + "'\n"  
+                    params_string += "\t" + _input.name + " = '" + _input.paths[0] + "'\n"  
         for additional_param in self.DAW.wf_level_params:
             param, value = additional_param
             params_string += "\t" + param + " = " + str(value) + "\n"
+        params_string += "threads = " + str(self.DAW.infra.threads)
         params_string += "}\n"
         with open('./generated_workflow/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)
             config_file.close()
         #TODO: add threads #params_string += ("threads = " + str(self.DAW.infra.threads) + "\n") 
     
+    def write_input_csv(self, DAW):
+        columns = ['sample', 'path_r1', 'path_r2']
+        df = pd.DataFrame(columns=columns)
+        input_tasks_list = []
+        for i in range(len(DAW.input.input_samples)):
+            inputDAW = DAW.input.input_samples[i]
+            df.loc[i] = [inputDAW.name, inputDAW.paths[0], inputDAW.paths[1]]
+            input_tasks_list.append(inputDAW.name)
+        df.to_csv("generated_workflow/input.csv", index=False)
+        return input_tasks_list
+
     
     def __init__(self, DAW):
         self.DAW = DAW
         ### write config file
         self.create_config_file()
         # TODO add docker containers??? add entry in DAW description?
-        
+        input_tasks_list = self.write_input_csv(DAW)
         nextflow_header = "nextflow.enable.dsl = 2\n"
         include = self.generate_include_modules()
         header = nextflow_header + "\n\n" + include
-        workflow = self.write_workflow()
+        workflow = self.write_workflow(input_tasks_list)
         ##task that generate input channels
         with open("generated_workflow/main.nf", "w") as f:
             f.write("")

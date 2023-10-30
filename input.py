@@ -19,6 +19,7 @@ class Input:
     def __init__(self, name, input_type, paths, strand, ref_type, uncompressed_size):
         
         self.name = name
+        #print(name)
         possible_input_types = ["sample", "reference"]
         self.uncompressed_size = uncompressed_size
         if not (input_type in possible_input_types): raise Exception( 'The variable "input_type" should be either "sample" or "reference"')
@@ -62,7 +63,7 @@ class Input_of_DAW:
         _size_of_reference_genome_max = -1
         
         for sample in input_description["samples"]:
-            mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
+            mInput = Input(sample["name"], "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
             _input_samples.append(mInput) 
             self.first_strand = mInput.strand    
             _size_of_samples.append(float(sample["uncompressed_size"]))

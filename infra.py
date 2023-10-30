@@ -1,10 +1,11 @@
-#class is defined using class keyword
+from statistics import median
 class Infra:  
 
     is_cluster:bool = True
     number_nodes:int = 1
     list_nodes:list = []
     RAM:int = 1
+    threads = 0
 
     def __init__(self, infra_description_json): 
             list_nodes = [] 
@@ -14,10 +15,14 @@ class Infra:
             self.list_nodes:list = list_nodes
             self.RAM = float(list_nodes[0].ram[:-1])
             if (len(list_nodes) > 1):
+                #
+                self.threads = median(list_nodes[0].cores)
                 self.is_cluster:bool = True
                 self.number_nodes:int = len(list_nodes)
                 self.bandwidth = infra_description_json["bandwidth"]
             else: 
+                #
+                self.threads = float(list_nodes[0].cores)
                 self.is_cluster:bool = False
                 self.number_nodes:int = 1
 

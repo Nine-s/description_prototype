@@ -21,21 +21,25 @@ class DAW:
         dependencies_dict = {}
         #get names of tasks
         task_name_list = []
+        task_modules_name = []
         for task in tasks_list:
             task_name_list.append(task.name)
+            task_modules_name.append(task.module_name)
         for task in tasks_list:            
             for input in task.require_input_from:   
                 if (".out_channel." in input):
                     dependency_name = input.split(".out")[0]
-                    #if dependency name is in task list
-                    if(dependency_name in task_name_list):
+                    #modify dependency name so it is align instead of STAR_ALIGN
+                    #XXXX
+                    if(dependency_name in task_modules_name):
                         if (dependency_name in dependencies_dict):
-                            dependencies_dict[dependency_name].append(task.name)
+                            dependencies_dict[dependency_name].append(task.module_name)
                         else:
                             dependencies_dict[dependency_name] = []
-                            dependencies_dict[dependency_name].append(task.name)
+                            dependencies_dict[dependency_name].append(task.module_name)
                     else:
-                        raise Exception("error: " + dependency_name+ " is not declared in " + str(input))                      
+                        raise Exception("error: " + dependency_name+ " is not declared in " + str(input)) 
+        print(dependencies_dict)                     
         return dependencies_dict
 
     @staticmethod
@@ -71,7 +75,7 @@ class DAW:
         ordered_tasks_list = self.build_DAG_from_dict(tasks_dict)
         tasks_priority = []
         for mtask in self.tasks:
-            task_name = mtask.name
+            task_name = mtask.module_name
             #print(task_name)
             index = ordered_tasks_list.index(task_name)
             tasks_priority.append(index)

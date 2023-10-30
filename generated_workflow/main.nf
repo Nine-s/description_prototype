@@ -1,20 +1,17 @@
 nextflow.enable.dsl = 2
 
 
-include { STAR_ALIGN  } from /home/ninon/modules/STAR.nf
-include { SAMTOOLS_SORT_CONVERT  } from /home/ninon/modules/samtools.nf
-include { FASTQSPLIT  } from /home/ninon/modules/fastqsplit.nf
-include { SAMTOOLS_MERGE  } from /home/ninon/modules/samtools_merge.nf
+include { STAR_ALIGN  } from '/home/ninon/description_prototype/v1/modules_nextflow/STAR_ALIGN.nf'
+include { SAMTOOLS_SORT_CONVERT  } from '/home/ninon/description_prototype/v1/modules_nextflow/SAMTOOLS.nf'
 
 workflow{
         read_pairs_ch = Channel
-            .fromPath( 'params.input_csv' )
-            .splitCsv(header: true, sep: '	')
-            .map {row -> tuple(row.sampleName, [row.fastq1, row.fastq2], row.strand)}
+            .fromPath( params.csv_input )
+            .splitCsv(header: true, sep: ',')
+            .map {row -> tuple(row.sample, [row.path_r1, row.path_r2])}
+            .view()
         
-FASTQSPLIT(params.sample01)
-STAR_ALIGN(split.out_channel.split_reads, params.ref_gtf, params.ref_genome)
-SAMTOOLS_MERGE(align.out_channel.sam)
-SAMTOOLS_SORT_CONVERT(merge.out_channel.merged)
+STAR_ALIGN(read_pairs_ch, params.ref_gtf, params.ref_genome)
+SAMTOOLS_SORT_CONVERT(STAR_ALIGN.out.sam)
 
 }

@@ -9,11 +9,11 @@ process STAR_ALIGN {
     path(annotation)
 
     output:
-    tuple val(sample_name), path("${sample_name}*.sam"), emit: sample_sam 
+    tuple val(sample_name), path("${sample_name}*.sam"), emit: sam 
 
     shell:
     '''
-    if [[ (params.strandness == "firststrand") || (params.strandedness == "secondstrand") ]]; then
+    if [[ (params.strand == "firststrand") || (params.strandedness == "secondstrand") ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\
@@ -23,7 +23,7 @@ process STAR_ALIGN {
 			--alignSoftClipAtReferenceEnds No \\
 			--outFilterIntronMotifs RemoveNoncanonical \\
 			--outSAMattrIHstart 0
-	elif [[ params.strandedness == "unstranded" ]]; then
+	elif [[ params.strand == "unstranded" ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\

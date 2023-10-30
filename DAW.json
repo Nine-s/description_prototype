@@ -15,7 +15,7 @@
           "name": "sort_convert",
           "toolname": "SAMTOOLS",
           "operation": "postprocess",
-          "inputs": ["align.out_channel.sam"],
+          "inputs": ["STAR_ALIGN.out_channel.sam"],
           "outputs": ["bam"],
           "parameters": ["--threads 2"],
           "module_name": "SAMTOOLS_SORT_CONVERT",
