@@ -1,0 +1,82 @@
+task_id	hash	native_id	process	tag	name	status	exit	module	container	cpus	time	disk	memory	attempt	submit	start	complete	duration	realtime	queue	%cpu	%mem	rss	vmem	peak_rss	peak_vmem	rchar	wchar	syscr	syscw	read_bytes	write_bytes	vol_ctxt	inv_ctxt	env	workdir	script	scratch	error_action
+2	cf/6ce115	10884	STAR_ALIGN	-	STAR_ALIGN (2)	FAILED	0	-	-	1	-	-	-	1	2023-10-31 12:52:42.949	2023-10-31 12:52:42.963	2023-10-31 12:52:43.226	277ms	6ms	-	70.6%	0.0%	0	0	0	0	90.9 KB	231 B	148	14	0	4 KB	0	0	-	/home/ninon/description_prototype/v1/generated_workflow/work/cf/6ce115c5b0c47209903ea2ba07ae1c	
+    if [[ (params.strand == "firststrand") || (params.strand == "secondstrand") ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn MmusculusP_1.fq.gz MmusculusP_2.fq.gz  \
+            --runThreadN 8 \
+            --outFileNamePrefix sample02. \
+            --sjdbGTFfile mm9.fa \
+			--alignSoftClipAtReferenceEnds No \
+			--outFilterIntronMotifs RemoveNoncanonical \
+			--outSAMattrIHstart 0
+	elif [[ params.strand == "unstranded" ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn MmusculusP_1.fq.gz MmusculusP_2.fq.gz  \
+			--alignSoftClipAtReferenceEnds No \
+			--outSAMstrandField intronMotif \
+			--outFilterIntronMotifs RemoveNoncanonical \
+        	--runThreadN 8 \
+        	--outFileNamePrefix sample02. \
+        	--sjdbGTFfile mm9.fa \
+			--outSAMattrIHstart 0
+	else  
+		echo params.strand > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+   	-	TERMINATE
+1	7e/26a31e	10899	STAR_ALIGN	-	STAR_ALIGN (1)	FAILED	0	-	-	1	-	-	-	1	2023-10-31 12:52:42.993	2023-10-31 12:52:43.063	2023-10-31 12:52:43.351	358ms	15ms	-	52.2%	0.0%	0	0	0	0	90.9 KB	231 B	148	14	0	4 KB	0	0	-	/home/ninon/description_prototype/v1/generated_workflow/work/7e/26a31e14ce0d02106eb90d0fa09ff6	
+    if [[ (params.strand == "firststrand") || (params.strand == "secondstrand") ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn Mmusculus_1.fq.gz Mmusculus_2.fq.gz  \
+            --runThreadN 8 \
+            --outFileNamePrefix sample01. \
+            --sjdbGTFfile mm9.fa \
+			--alignSoftClipAtReferenceEnds No \
+			--outFilterIntronMotifs RemoveNoncanonical \
+			--outSAMattrIHstart 0
+	elif [[ params.strand == "unstranded" ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn Mmusculus_1.fq.gz Mmusculus_2.fq.gz  \
+			--alignSoftClipAtReferenceEnds No \
+			--outSAMstrandField intronMotif \
+			--outFilterIntronMotifs RemoveNoncanonical \
+        	--runThreadN 8 \
+        	--outFileNamePrefix sample01. \
+        	--sjdbGTFfile mm9.fa \
+			--outSAMattrIHstart 0
+	else  
+		echo params.strand > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+   	-	TERMINATE
+1	7e/26a31e	10899	STAR_ALIGN	-	STAR_ALIGN (1)	RUNNING	-	-	-	1	-	-	-	1	2023-10-31 12:52:42.993	2023-10-31 12:52:43.063	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	/home/ninon/description_prototype/v1/generated_workflow/work/7e/26a31e14ce0d02106eb90d0fa09ff6	
+    if [[ (params.strand == "firststrand") || (params.strand == "secondstrand") ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn Mmusculus_1.fq.gz Mmusculus_2.fq.gz  \
+            --runThreadN 8 \
+            --outFileNamePrefix sample01. \
+            --sjdbGTFfile mm9.fa \
+			--alignSoftClipAtReferenceEnds No \
+			--outFilterIntronMotifs RemoveNoncanonical \
+			--outSAMattrIHstart 0
+	elif [[ params.strand == "unstranded" ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn Mmusculus_1.fq.gz Mmusculus_2.fq.gz  \
+			--alignSoftClipAtReferenceEnds No \
+			--outSAMstrandField intronMotif \
+			--outFilterIntronMotifs RemoveNoncanonical \
+        	--runThreadN 8 \
+        	--outFileNamePrefix sample01. \
+        	--sjdbGTFfile mm9.fa \
+			--outSAMattrIHstart 0
+	else  
+		echo params.strand > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+   	-	-
