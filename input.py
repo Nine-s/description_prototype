@@ -14,9 +14,10 @@ class Input:
     paired:bool = True
     strand:str = "forward"
     ref_type:str = ""
+    additional_columns:dict = None
 
 
-    def __init__(self, name, input_type, paths, strand, ref_type, uncompressed_size):
+    def __init__(self, name, input_type, paths, strand, ref_type, uncompressed_size, additional_columns=None):
         
         self.name = name
         #print(name)
@@ -45,7 +46,7 @@ class Input:
             if not (ref_type in possible_ref_types): raise Exception( 'The variable "strand" should be "genome", "annotation" or "others"')
             self.ref_type = ref_type
             strand = ""
-            
+        self.additional_columns = additional_columns 
         
 class Input_of_DAW:  
 
@@ -63,7 +64,9 @@ class Input_of_DAW:
         _size_of_reference_genome_max = -1
         
         for sample in input_description["samples"]:
-            mInput = Input(sample["name"], "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
+            standard_columns = ["name","type","path_r1","path_r2","strand","uncompressed_size"]
+            additional_columns = {description: value for description, value in sample.items() if description not in standard_columns}
+            mInput = Input(sample["name"], "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"], additional_columns)
             _input_samples.append(mInput) 
             self.first_strand = mInput.strand    
             _size_of_samples.append(float(sample["uncompressed_size"]))
