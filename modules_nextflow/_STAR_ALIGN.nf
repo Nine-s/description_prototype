@@ -11,32 +11,32 @@ process STAR_ALIGN {
     output:
     tuple val(sample_name), path("${sample_name}*.sam"), emit: sam 
 
-    shell:
-    '''
-    if [[ (!{params.strand} == "firststrand") || (!{params.strand} == "secondstrand") ]]; then
+    script:
+    """
+    if [[ (${params.strand} == "firststrand") || (${params.strand} == "secondstrand") ]]; then
 		STAR \\
             --genomeDir . \\
-            --readFilesIn !{reads[0]} !{reads[1]}  \\
-            --runThreadN !{params.threads} \\
-            --outFileNamePrefix !{sample_name}. \\
-            --sjdbGTFfile !{annotation} \\
+            --readFilesIn ${reads[0]} ${reads[1]}  \\
+            --runThreadN ${params.threads} \\
+            --outFileNamePrefix ${sample_name}. \\
+            --sjdbGTFfile ${annotation} \\
 			--alignSoftClipAtReferenceEnds No \\
 			--outFilterIntronMotifs RemoveNoncanonical \\
 			--outSAMattrIHstart 0
-	elif [[ !{params.strand} == "unstranded" ]]; then
+	elif [[ ${params.strand} == "unstranded" ]]; then
 		STAR \\
             --genomeDir . \\
-            --readFilesIn !{reads[0]} !{reads[1]}  \\
+            --readFilesIn ${reads[0]} ${reads[1]}  \\
 			--alignSoftClipAtReferenceEnds No \\
 			--outSAMstrandField intronMotif \\
 			--outFilterIntronMotifs RemoveNoncanonical \\
-        	--runThreadN !{params.threads} \\
-        	--outFileNamePrefix !{sample_name}. \\
-        	--sjdbGTFfile !{annotation} \\
+        	--runThreadN ${params.threads} \\
+        	--outFileNamePrefix ${sample_name}. \\
+        	--sjdbGTFfile ${annotation} \\
 			--outSAMattrIHstart 0
 	else  
-		echo !{params.strand} > error_strandness.txt
+		echo ${params.strand} > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt
 	fi
-   '''
+   """
 }

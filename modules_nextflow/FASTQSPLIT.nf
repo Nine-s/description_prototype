@@ -33,7 +33,7 @@ process SPLIT_READS{
     s=$(echo !{params.split})
     z=$((length / s))
     splitby=$((${z} + 1))
-    /home/simon/GitHub/workflow-kallisto-split/bin/splitFastq -i !{fastq[0]} -n ${splitby} -o !{name}_1
-    /home/simon/GitHub/workflow-kallisto-split/bin/splitFastq -i !{fastq[1]} -n ${splitby} -o !{name}_2
+    !{params.basedir}/../bin/splitFastq -i !{fastq[0]} -n ${splitby} -o !{name}_1
+    !{params.basedir}/../bin/splitFastq -i !{fastq[1]} -n ${splitby} -o !{name}_2
     '''
 }

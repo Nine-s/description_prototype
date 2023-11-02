@@ -1,6 +1,6 @@
 import pandas as pd
 from itertools import chain
-
+import os
 class to_nextflow:  
 
     DAW = None
@@ -86,7 +86,7 @@ class to_nextflow:
         for additional_param in self.DAW.wf_level_params:
             param, value = additional_param
             params_string += "\t" + param + " = " + str(value) + "\n"
-
+        params_string += "basedir = '" + os.popen('pwd').read().strip() + "/generated_workflow'"
         params_string += "}\n"
         with open('./generated_workflow/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)
@@ -104,10 +104,10 @@ class to_nextflow:
             mandatory_values = [inputDAW.name, inputDAW.paths[0], inputDAW.paths[1]]
             additional_values = []
             for additional_element in additional_columns:
-            	if(additional_element in inputDAW.additional_columns):
-            	    additional_values.append(inputDAW.additional_columns[additional_element])
-            	else:
-            	    additional_values.append("")
+                if(additional_element in inputDAW.additional_columns):
+                    additional_values.append(inputDAW.additional_columns[additional_element])
+                else:
+                    additional_values.append("")
             df.loc[i] = mandatory_values + additional_values
             input_tasks_list.append(inputDAW.name)
         df.to_csv("generated_workflow/input.csv", index=False)
