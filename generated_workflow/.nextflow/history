@@ -1,4 +1,0 @@
-2023-10-31 12:48:19	6s	silly_easley	ERR	80d37380a2a938303d6eb5ebe74fc521	f84d557f-2dce-425a-b5f3-c0a664572431	nextflow run main.nf -c nextflow.config
-2023-10-31 12:52:40	4.9s	big_solvay	ERR	80d37380a2a938303d6eb5ebe74fc521	073a7651-c19f-49bf-be02-1d8ef39428b7	nextflow run main.nf -c nextflow.config
-2023-10-31 12:59:33	6.9s	jolly_mcclintock	ERR	80d37380a2a938303d6eb5ebe74fc521	0bef0057-2903-4662-a206-fc8992342bb4	nextflow run main.nf -c nextflow.config
-2023-10-31 13:04:00	5.7s	cranky_nightingale	ERR	80d37380a2a938303d6eb5ebe74fc521	c789ed02-b819-47df-8f91-c1c791142596	nextflow run main.nf -c nextflow.config

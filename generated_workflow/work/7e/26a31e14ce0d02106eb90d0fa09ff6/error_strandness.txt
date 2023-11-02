@@ -1,2 +1,0 @@
-params.strand
-strandness cannot be determined
