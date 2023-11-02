@@ -15,4 +15,20 @@ process SAMTOOLS_SORT_CONVERT {
     
 }
 
+process SAMTOOLS_MERGE {
+    label 'samtools'
+    publishDir params.outdir
+
+    input:
+    file out_bam
+    
+    output:
+    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: merged
+    
+    script:
+    """
+    samtools merge alignement_gathered.bam ${out_bam}
+    """
+}
+
 //samtools view -bS ${sam_file} -@ ${params.threads} | samtools sort -o ${sample_name}.sorted.bam -T tmp  -@ ${params.threads} 

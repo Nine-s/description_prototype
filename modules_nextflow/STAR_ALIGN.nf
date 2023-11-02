@@ -13,7 +13,7 @@ process STAR_ALIGN {
 
     shell:
     '''
-    if [[ (params.strand == "firststrand") || (params.strandedness == "secondstrand") ]]; then
+    if [[ (params.strand == "firststrand") || (params.strand == "secondstrand") ]]; then
 		STAR \\
             --genomeDir . \\
             --readFilesIn !{reads[0]} !{reads[1]}  \\
@@ -35,7 +35,7 @@ process STAR_ALIGN {
         	--sjdbGTFfile !{annotation} \\
 			--outSAMattrIHstart 0
 	else  
-		echo params.strandedness > error_strandness.txt
+		echo params.strand > error_strandness.txt
 		echo "strandness cannot be determined" >> error_strandness.txt
 	fi
    '''

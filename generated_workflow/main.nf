@@ -1,10 +1,9 @@
 nextflow.enable.dsl = 2
 
 
-include { STAR_ALIGN  } from '/home/ninon/description_prototype/v1/modules_nextflow/STAR_ALIGN.nf'
-include { SAMTOOLS_SORT_CONVERT  } from '/home/ninon/description_prototype/v1/modules_nextflow/SAMTOOLS.nf'
-include { FASTQSPLIT  } from '/home/ninon/modules/fastqsplit.nf'
-include { SAMTOOLS_MERGE  } from '/home/ninon/modules/samtools_merge.nf'
+include { STAR_ALIGN  } from '/home/simon/GitHub/description_prototype/modules_nextflow/STAR_ALIGN.nf'
+include { SAMTOOLS_SORT_CONVERT ; SAMTOOLS_MERGE  } from '/home/simon/GitHub/description_prototype/modules_nextflow/SAMTOOLS.nf'
+include { FASTQSPLIT  } from '/home/simon/GitHub/description_prototype/modules_nextflow/FASTQSPLIT.nf'
 
 workflow{
         read_pairs_ch = Channel

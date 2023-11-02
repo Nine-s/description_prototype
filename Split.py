@@ -118,11 +118,16 @@ def split(DAW, annotation_database, input_description):
     read_input_align_tool = next(input for input in first_split_task.inputs if input.input_type == "sample")
     read_input_from_DAW = first_split_task.inputs_from_DAW[first_split_task.inputs.index(read_input_align_tool)]
     split_parameter = split_number #TODO: add split param as global workflow parameter
-    split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT", "/home/ninon/modules/fastqsplit.nf", input_description) 
+    full_module_path = first_split_task.module_path
+    
+    last_slash_index = full_module_path.rfind("/")
+    module_path = full_module_path[:last_slash_index]
+
+    split_task = Task("split", "fastqsplit", [read_input_from_DAW], ["split_reads"], [], "split", "FASTQSPLIT",  module_path + "/FASTQSPLIT.nf", input_description) 
     split_task_output = split_task.module_name + ".out_channel." + split_task.outputs[0]
     first_split_task.change_input(split_task_output, read_input_align_tool)
     DAW.insert_tasks(split_task) 
-    merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", "/home/ninon/modules/samtools_merge.nf", input_description)
+    merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", "SAMTOOLS_MERGE", module_path + "/SAMTOOLS.nf", input_description)
     merge_task_output = merge_task.module_name + ".out_channel." + merge_task.outputs[0]
     for child_task in child_tasks:
         child_task.change_input(merge_task_output, output_last_split_task)
