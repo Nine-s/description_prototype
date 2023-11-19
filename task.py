@@ -46,7 +46,7 @@ class Task:
         if isinstance(new_input, str) and ".out" in new_input and new_input not in self.require_input_from:
             self.require_input_from.append(new_input)
     
-    def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description):#, require_input_from): 
+    def __init__(self, name, tool, inputs_from_DAW, outputs, parameters, operation, module_name, module_path, input_description, channel_operators=None):#, require_input_from): 
         self.name:str = name
         self.tool:str = tool
         self.outputs:list = outputs
@@ -56,6 +56,7 @@ class Task:
         self.module_path:str = module_path
         self.inputs_from_DAW = inputs_from_DAW
         self.input_description = input_description
+        self.channel_operators = channel_operators
         inputs = self.create_input(inputs_from_DAW, input_description)
         self.inputs = inputs
         self.inputs_task:list = inputs_from_DAW

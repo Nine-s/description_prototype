@@ -26,20 +26,23 @@ class to_nextflow:
             priority_index = self.DAW.tasks_priority.index(i)
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
-            for my_input in tmp_task.inputs_task:
+            for index, my_input in enumerate(tmp_task.inputs_task):
                 print("####")
                 print(my_input)
                 print(input_tasks_list)
                 print("#######")
                 if((".out" not in my_input) and (my_input in input_tasks_list)): 
-                        tmp += "read_pairs_ch, "       
+                        tmp += "read_pairs_ch"                        
                 elif((".out" not in my_input) and (my_input != "reads")):
-                    tmp += "params." + my_input + ", "
+                    tmp += "params." + my_input
                     
                 else: 
                     tmp_input = my_input
                     tmp_input = tmp_input.replace("out_channel", "out")
-                    tmp += tmp_input + ", "
+                    tmp += tmp_input
+                if tmp_task.channel_operators != None:
+                    tmp += tmp_task.channel_operators[index]
+                tmp += ", "
             tmp = tmp[:-2] + ")\n"
             core += tmp
         return core
