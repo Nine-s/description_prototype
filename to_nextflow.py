@@ -26,20 +26,23 @@ class to_nextflow:
             priority_index = self.DAW.tasks_priority.index(i)
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
-            for my_input in tmp_task.inputs_task:
+            for index, my_input in enumerate(tmp_task.inputs_task):
                 print("####")
                 print(my_input)
                 print(input_tasks_list)
                 print("#######")
                 if((".out" not in my_input) and (my_input in input_tasks_list)): 
-                        tmp += "read_pairs_ch, "       
+                        tmp += "read_pairs_ch"                        
                 elif((".out" not in my_input) and (my_input != "reads")):
-                    tmp += "params." + my_input + ", "
+                    tmp += "params." + my_input
                     
                 else: 
                     tmp_input = my_input
                     tmp_input = tmp_input.replace("out_channel", "out")
-                    tmp += tmp_input + ", "
+                    tmp += tmp_input
+                if tmp_task.channel_operators != None:
+                    tmp += tmp_task.channel_operators[index]
+                tmp += ", "
             tmp = tmp[:-2] + ")\n"
             core += tmp
         return core
@@ -50,14 +53,17 @@ class to_nextflow:
         include_dictionnary = {}
         for task in self.DAW.tasks:
             if (task.module_path in include_dictionnary):
-                include_dictionnary[task.module_path].append(task.module_name)
+                include_dictionnary[task.module_path].append((task.module_name, task.include_from))
             else:
                 include_dictionnary[task.module_path] = []
-                include_dictionnary[task.module_path].append(task.module_name)
+                include_dictionnary[task.module_path].append((task.module_name,task.include_from))
         for path in include_dictionnary:
             module_names_string = ""
             for module_name in include_dictionnary[path]:
-                module_names_string += module_name + " ; "
+                if(module_name[1] == ""):
+                    module_names_string += module_name[0] + " ; "
+                else: 
+                    module_names_string += module_name[1] + " as " + module_name[0] + "; "
             include = "include { " + module_names_string[:-2] + " } from '" + path + "'\n"
             include_string = include_string + include
         return include_string    
@@ -86,7 +92,11 @@ class to_nextflow:
         for additional_param in self.DAW.wf_level_params:
             param, value = additional_param
             params_string += "\t" + param + " = " + str(value) + "\n"
-        params_string += "basedir = '" + os.popen('pwd').read().strip() + "/generated_workflow'"
+        for input_param in self.DAW.input.input_parameters:
+            value = self.DAW.input.input_parameters[input_param]
+            params_string += "\t" + input_param + " = " + str(value) + "\n"
+        
+        params_string += "\tbasedir = '" + os.popen('pwd').read().strip() + "/generated_workflow'\n"
         params_string += "}\n"
         with open('./generated_workflow/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)

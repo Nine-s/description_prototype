@@ -95,9 +95,15 @@ class DAW:
         tasks_list = []
         for i in range(len(DAW_description["tasks"])):
             json_task = DAW_description["tasks"][i]
+            additional_inputs = {}
+            if "channel_operators" in json_task:
+                additional_inputs["channel_operators"] = json_task["channel_operators"]
+            if "include_from" in json_task:
+                additional_inputs["include_from"] = json_task["include_from"]
             new_task = Task(json_task["name"], json_task["toolname"], json_task["inputs"], json_task["outputs"], 
-                json_task["parameters"], json_task["operation"], json_task["module_name"], json_task["module_path"], 
-                input_description)
+                    json_task["parameters"], json_task["operation"], json_task["module_name"], json_task["module_path"], 
+                    input_description, additional_inputs)
+            
             tasks_list.append(new_task)
         self.tasks = tasks_list
         # define their priority

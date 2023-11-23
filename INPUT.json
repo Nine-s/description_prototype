@@ -4,16 +4,17 @@
       {
          "name": "sample01",
          "type": "reads",
-         "path_r1": "/home/ninon/description_prototype/data/test_sam_cuff/Mmusculus_1.fq.gz",
-         "path_r2": "/home/ninon/description_prototype/data/test_sam_cuff/Mmusculus_2.fq.gz",
+         "path_r1": "/home/simon/input/SRR10055512_1.fq",
+         "path_r2": "/home/simon/input/SRR10055512_2.fq",
          "strand": "unstranded",
-         "uncompressed_size": "23"
+         "uncompressed_size": "23",
+         "condition": "control"
       },
       {
          "name": "sample02",
          "type": "reads",
-         "path_r1": "/home/ninon/description_prototype/data/test_sam_cuff/MmusculusP_1.fq.gz",
-         "path_r2": "/home/ninon/description_prototype/data/test_sam_cuff/MmusculusP_2.fq.gz",
+         "path_r1": "/home/simon/input/ARR10055512_1.fq",
+         "path_r2": "/home/simon/input/ARR10055512_2.fq",
          "strand": "unstranded",
          "uncompressed_size": "43"
       }
@@ -22,17 +23,25 @@
    "references": [
     {
        "name": "ref_gtf",
-       "path": "/home/ninon/description_prototype/data/test_sam_cuff/ref-transcripts.gtf",
+       "path": "/home/simon/input/ref-transcripts.gtf",
        "reference_type": "annotation",
        "uncompressed_size": "5"
     },
 
     {
        "name": "ref_genome",
-       "path": "/home/ninon/description_prototype/data/test_sam_cuff/mm9.fa",
+       "path": "/home/simon/input/hg19.fa",
        "reference_type": "genome",
        "uncompressed_size": "15"
     }
 
+ ],
+ 
+ "parameters": [
+   {
+     "name": "csv_contrastsheet",
+     "value": "/home/simon/input/hg19.fa"
+   }   
  ]
+ 
 }

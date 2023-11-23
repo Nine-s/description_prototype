@@ -54,6 +54,7 @@ class Input_of_DAW:
     sizes_of_samples:list = []
     input_samples:list = []
     input_references:list = []
+    input_parameters:dict = {}
     first_strand = "foward"
     size_of_reference_genome_max:int = 0 #TODO: consider metagenomics: add a condition to take the max number?
 
@@ -84,4 +85,7 @@ class Input_of_DAW:
         self.size_of_samples = _size_of_samples
         self.input_samples = _input_samples     
         self.size_of_reference_genome_max = _size_of_reference_genome_max
+        for param in input_description["parameters"]:
+            value = isinstance(param["value"], str) * "'" + str(param["value"]) + isinstance(param["value"], str) * "'"
+            self.input_parameters[param["name"]] = value     
        
