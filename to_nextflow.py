@@ -53,14 +53,17 @@ class to_nextflow:
         include_dictionnary = {}
         for task in self.DAW.tasks:
             if (task.module_path in include_dictionnary):
-                include_dictionnary[task.module_path].append(task.module_name)
+                include_dictionnary[task.module_path].append((task.module_name, task.include_from))
             else:
                 include_dictionnary[task.module_path] = []
-                include_dictionnary[task.module_path].append(task.module_name)
+                include_dictionnary[task.module_path].append((task.module_name,task.include_from))
         for path in include_dictionnary:
             module_names_string = ""
             for module_name in include_dictionnary[path]:
-                module_names_string += module_name + " ; "
+                if(module_name[1] == ""):
+                    module_names_string += module_name[0] + " ; "
+                else: 
+                    module_names_string += module_name[1] + " as " + module_name[0] + "; "
             include = "include { " + module_names_string[:-2] + " } from '" + path + "'\n"
             include_string = include_string + include
         return include_string    
