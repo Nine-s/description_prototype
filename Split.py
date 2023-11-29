@@ -85,8 +85,6 @@ def split(DAW, annotation_database, input_description):
     split_number = DAW.infra.number_nodes
     DAW.wf_level_params.append(("split", split_number))
     cores = [int(node.cores) for node in DAW.infra.list_nodes] 
-    thread_number = int(statistics.median(cores))
-    DAW.wf_level_params.append(("threads", thread_number))
 
     
     #find splittable tasks, first is align

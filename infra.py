@@ -10,13 +10,13 @@ class Infra:
     def __init__(self, infra_description_json): 
             list_nodes = [] 
             for node in infra_description_json["nodes"]:
-                my_node = Node(node["name"], node["RAM"], node["cores"], node["CPU"])
+                my_node = Node(node["name"], node["RAM"], int(node["cores"]), node["CPU"])
                 list_nodes.append(my_node)
             self.list_nodes:list = list_nodes
             self.RAM = float(list_nodes[0].ram[:-1])
             if (len(list_nodes) > 1):
                 #
-                self.threads = median(list_nodes[0].cores)
+                self.threads = median([node.cores for node in list_nodes])
                 self.is_cluster:bool = True
                 self.number_nodes:int = len(list_nodes)
                 self.bandwidth = infra_description_json["bandwidth"]

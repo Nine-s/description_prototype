@@ -36,6 +36,8 @@ class Task:
             for parameter in input_description["parameters"]:
                 if(parameter["name"] == input): 
                     is_input_described = True
+            if(input == "csv_input"):
+                is_input_described = True
             if not is_input_described:
                     raise Exception( 'The input "' + input + '" of the task '+ self.name + ' was not described in the input description file')
         return list_inputs

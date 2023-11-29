@@ -15,7 +15,7 @@ class DAW:
     input:Input_of_DAW = None
     infra:Infra = None
     wf_level_params:list = []
-
+    
     @staticmethod
     def build_dict_from_dependencies(tasks_list):
         dependencies_dict = {}
@@ -25,21 +25,18 @@ class DAW:
         for task in tasks_list:
             task_name_list.append(task.name)
             task_modules_name.append(task.module_name)
-        for task in tasks_list:            
+        for module_name in task_modules_name:
+            dependencies_dict[module_name] = []
+        for task in tasks_list:    
             for input in task.require_input_from:   
                 if (".out_channel." in input):
                     dependency_name = input.split(".out")[0]
                     #modify dependency name so it is align instead of STAR_ALIGN
                     #XXXX
                     if(dependency_name in task_modules_name):
-                        if (dependency_name in dependencies_dict):
-                            dependencies_dict[dependency_name].append(task.module_name)
-                        else:
-                            dependencies_dict[dependency_name] = []
-                            dependencies_dict[dependency_name].append(task.module_name)
+                        dependencies_dict[dependency_name].append(task.module_name)
                     else:
                         raise Exception("error: " + dependency_name+ " is not declared in " + str(input)) 
-        print(dependencies_dict)                     
         return dependencies_dict
 
     @staticmethod

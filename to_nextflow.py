@@ -95,7 +95,7 @@ class to_nextflow:
         for input_param in self.DAW.input.input_parameters:
             value = self.DAW.input.input_parameters[input_param]
             params_string += "\t" + input_param + " = " + str(value) + "\n"
-        
+        params_string += "\tthreads = " + str(self.DAW.infra.threads) + "\n"
         params_string += "\tbasedir = '" + os.popen('pwd').read().strip() + "/generated_workflow'\n"
         params_string += "}\n"
         with open('./generated_workflow/nextflow.config', 'w') as config_file:
