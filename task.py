@@ -22,10 +22,10 @@ class Task:
             if(".out" in input):
                 continue #TODO: check if the name before "out" exists 
             for sample in input_description["samples"]:
-                if (sample["name"] == input):
-                    mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
-                    list_inputs.append(mInput)
-                    is_input_described = True
+                # if (sample["name"] == input):
+                mInput = Input(input, "sample", [sample["path_r1"], sample["path_r2"]], sample["strand"], "", sample["uncompressed_size"])
+                list_inputs.append(mInput)
+                is_input_described = True
             if(is_input_described):
                 continue
             for reference in input_description["references"]:
