@@ -56,9 +56,9 @@ def choose_best_tool(list_alt_tools, annot, input_of_daw):
         # print(list(annot.runtime_estimation_models.keys()))
         if tool.toolname in annot.runtime_estimation_models:
             model = annot.runtime_estimation_models[tool.toolname]
-        predicted_runtime = model.predict(new_data_point_poly)
-        list_predicted_runtimes.append(predicted_runtime)
-        list_tools.append(tool)
+            predicted_runtime = model.predict(new_data_point_poly)
+            list_predicted_runtimes.append(predicted_runtime)
+            list_tools.append(tool)
     min_number = min(list_predicted_runtimes)
     min_index = list_predicted_runtimes.index(min_number)
     best_tool = list_tools[min_index]

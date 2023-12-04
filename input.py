@@ -26,8 +26,8 @@ class Input:
         if not (input_type in possible_input_types): raise Exception( 'The variable "input_type" should be either "sample" or "reference"')
         else: self.input_type = input_type
         #TODO after testing: number of lines and uncompressed size from os.command
-        for path in paths:
-            if not (os.path.exists(path)): raise Exception( 'The input file provided ' + path + ' does not exist') 
+        # for path in paths:
+        #     if not (os.path.exists(path)): raise Exception( 'The input file provided ' + path + ' does not exist') 
         self.paths = paths
         
         possible_strand_types = ["forward", "reverse", "unstranded"]
@@ -74,12 +74,12 @@ class Input_of_DAW:
                 
         for reference in input_description["references"]:
             mInput = Input(input, "reference", [reference["path"]], "", reference["reference_type"], reference["uncompressed_size"])
-            _input_references.append(mInput)  
+            _input_references.append(mInput)
             if (reference["reference_type"] == "genome"):
                 if (_size_of_reference_genome_max == -1):
                     _size_of_reference_genome_max = float(reference["uncompressed_size"])
                 else:
-                    _size_of_reference_genome_max = float(max(_size_of_reference_genome_max, int(reference["uncompressed_size"])))
+                    _size_of_reference_genome_max = float(max(_size_of_reference_genome_max, float(reference["uncompressed_size"])))
         self.number_of_samples = len(_input_samples)         
         self.input_references = _input_references
         self.size_of_samples = _size_of_samples

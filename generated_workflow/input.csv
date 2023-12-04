@@ -1,0 +1,3 @@
+sample,path_r1,path_r2,condition
+samples,/home/simon/input/SRR10055512_1.fq,/home/simon/input/SRR10055512_2.fq,control
+sample02,/home/simon/input/ARR10055512_1.fq,/home/simon/input/ARR10055512_2.fq,
