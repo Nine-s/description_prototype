@@ -71,7 +71,7 @@ def split(DAW, annotation_database, input_description):
     if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
         return DAW
 
-    median_input_size = statistics.median(DAW.input.size_of_samples)
+    median_input_size = 150#statistics.median(DAW.input.size_of_samples)
     ram = DAW.infra.RAM
     cpus = [node.cpu for node in DAW.infra.list_nodes]
     for i, element in enumerate(cpus):

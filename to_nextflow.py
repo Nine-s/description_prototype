@@ -27,10 +27,10 @@ class to_nextflow:
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
             for index, my_input in enumerate(tmp_task.inputs_task):
-                print("####")
-                print(my_input)
-                print(input_tasks_list)
-                print("#######")
+                # print("####")
+                # print(my_input)
+                # print(input_tasks_list)
+                # print("#######")
                 if((".out" not in my_input) and (my_input in input_tasks_list)): 
                         tmp += "read_pairs_ch"                        
                 elif((".out" not in my_input) and (my_input != "reads")):

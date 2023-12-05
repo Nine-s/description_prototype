@@ -62,11 +62,11 @@ def choose_best_tool(list_alt_tools, annot, input_of_daw):
     min_number = min(list_predicted_runtimes)
     min_index = list_predicted_runtimes.index(min_number)
     best_tool = list_tools[min_index]
-    print(best_tool.toolname)
+    #print(best_tool.toolname)
     return best_tool
 
 def create_new_task(task, new_tool, input_description):
-    print(task)
+    #print(task)
     name = new_tool.toolname + "_" + new_tool.operation
     tool = new_tool.toolname
     outputs = task.outputs
@@ -79,12 +79,14 @@ def create_new_task(task, new_tool, input_description):
 
     new_task = Task(name=name, tool=tool, inputs_from_DAW=inputs_from_DAW, outputs=outputs, parameters=parameters, operation=operation, module_name=module_name, module_path=module_path, input_description=input_description)
     #print(self.tasks)
-    new_task.my_print()
+    #new_task.my_print()
     return new_task
 
 def replace_tool(daw, annotations, input_description, input_of_daw):
 
-    for task in daw.tasks:
+    # for task in daw.tasks:
+    for i in range(len(daw.tasks)):
+        task = daw.tasks[i]
         # print("++++++")
         # print(task.tool)
         annotation_tools_list = [tool for tool in annotations.annotation_db] 
@@ -92,14 +94,14 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
         # find the tool of the DAW task in the annot DB
         tool_to_replace = next((tool_in_annot for tool_in_annot in annotation_tools_list if (tool_in_annot.toolname.casefold() == task.tool.casefold())), None)
         if(tool_to_replace == None):
-            print("Tool to replace not found in DB")
+            #print("Tool to replace not found in DB")
             continue
 
         # find the tools in the db that match the requirements
         alternative_tools_list = find_alternative_tool(annotations.annotation_db, tool_to_replace)
         
         if ( len(alternative_tools_list) < 1 ):
-            print("No alternative found")
+            #print("No alternative found")
             continue
         else:
             # print("#### Alt tools found!")
@@ -120,7 +122,10 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
                 final_tool = choose_best_tool(alternative_tools_list, annotations, input_of_daw) #TODO
                 #final_tool = alternative_tools_list[0]
                 new_task = create_new_task(task, final_tool, input_description)
+                
                 task = new_task
+                #task =1 
+                daw.tasks[i] = new_task
                 #task.my_print()
             else:
                 continue

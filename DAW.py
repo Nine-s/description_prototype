@@ -112,12 +112,7 @@ class DAW:
         for task in new_daw.tasks:
             print(task.name)
         new_daw = split(new_daw, annotationdb, input_description)
-        # TODO: compress.
-        # if (self.infra.is_cluster == True):
-        #    new_daw = compress_before_file_transfer(self, input_description)
-        # TODO: generate description
-        #return new_daw 
-        return
+        return new_daw
 
     def my_print(self):
         print("DAW")
