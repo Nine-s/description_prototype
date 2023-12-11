@@ -18,18 +18,17 @@ for i in os.listdir(annotation_path):
         #print(full_path)
 annotDB = AnnotationDB(annotation_files)
 
-with open('/home/ninon/description_prototype/rnasplice-description/INFRA.json') as jsonfile:
+with open('/home/simon/GitHub/rnasplice-description/INFRA.json') as jsonfile:
     infra_description = json.load(jsonfile)
 
-with open('/home/ninon/description_prototype/rnasplice-description/DAW.json') as jsonfile:
+with open('/home/simon/GitHub/rnasplice-description/DAW.json') as jsonfile:
     daw_description = json.load(jsonfile)
 
-# with open('/home/ninon/description_prototype/rnasplice-description/INPUT_DUMMY.json') as jsonfile:
-#     input_description = json.load(jsonfile)
-
-with open('/home/ninon/description_prototype/rnasplice-description/INPUT_EVAL.json') as jsonfile:
+with open('/home/simon/GitHub/rnasplice-description/INPUT_DUMMY.json') as jsonfile:
     input_description = json.load(jsonfile)
 
+with open('/home/simon/GitHub/rnasplice-description/INFRA.json') as jsonfile:
+    infra_description = json.load(jsonfile)
 
 #define objects for infra + nodes
 my_infra = Infra(infra_description)
