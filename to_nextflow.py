@@ -31,6 +31,7 @@ class to_nextflow:
                 # print(my_input)
                 # print(input_tasks_list)
                 # print("#######")
+
                 #if((".out" not in my_input) and (my_input in input_tasks_list)): 
                 if (my_input == "samples"):
                         tmp += "read_pairs_ch"            
