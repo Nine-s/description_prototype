@@ -1,7 +1,7 @@
 import pandas as pd
 from itertools import chain
 import os
-class to_nextflow:  
+class to_nextflow:
 
     DAW = None
 
@@ -10,7 +10,7 @@ class to_nextflow:
         read_pairs_ch = Channel
             .fromPath( params.csv_input )
             .splitCsv(header: true, sep: ',')
-            .map {row -> tuple(row.sample, [row.path_r1, row.path_r2])}
+            .map {row -> tuple(row.sample, [row.path_r1, row.path_r2], row.condition)}
             .view()
         """
         #.map {row -> tuple(row.sampleName, [row.fastq1, row.fastq2], row.strand)}
@@ -31,8 +31,9 @@ class to_nextflow:
                 # print(my_input)
                 # print(input_tasks_list)
                 # print("#######")
-                if((".out" not in my_input) and (my_input in input_tasks_list)): 
-                        tmp += "read_pairs_ch"                        
+                #if((".out" not in my_input) and (my_input in input_tasks_list)): 
+                if (my_input == "samples"):
+                        tmp += "read_pairs_ch"            
                 elif((".out" not in my_input) and (my_input != "reads")):
                     tmp += "params." + my_input
                     
@@ -83,12 +84,17 @@ class to_nextflow:
         params_string += "\tstrand = " + "'" + self.DAW.input.first_strand + "'\n"
         params_string += "\toutdir = 'results'\n"
         params_string += "\tcsv_input = './input.csv'\n"
+        for ref in self.DAW.input.input_references:
+            params_string += "\t"+ str(ref.name) + "= '"+ str(ref.paths[0]) + "'\n"
+
+        # print(_input.input_type)
+        #         if ("reference" in _input.input_type):
+        #             print("ok")
+        #             params_string += "\t" + _input.name + " = '" + _input.paths[0] + "'\n"  
         for i in range(len(self.DAW.tasks)):
             task_inputs = self.DAW.tasks[i].inputs
             for j in range(len(task_inputs)):
                 _input = task_inputs[j]
-                if ("reference" in _input.input_type):
-                    params_string += "\t" + _input.name + " = '" + _input.paths[0] + "'\n"  
         for additional_param in self.DAW.wf_level_params:
             param, value = additional_param
             params_string += "\t" + param + " = " + str(value) + "\n"
@@ -126,7 +132,6 @@ class to_nextflow:
     
     def __init__(self, DAW):
         self.DAW = DAW
-        ### write config file
         self.create_config_file()
         # TODO add docker containers??? add entry in DAW description?
         input_tasks_list = self.write_input_csv(DAW)

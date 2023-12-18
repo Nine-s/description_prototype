@@ -105,7 +105,7 @@ class DAW:
         self.tasks = tasks_list
         # define their priority
         self.tasks_priority = self.define_tasks_priority() 
-        self.rewrite(annotDB, input_description)
+        #self.rewrite(annotDB, input_description)
     
     def rewrite(self, annotationdb, input_description):
         new_daw = replace_tool(self, annotationdb, input_description, self.input)
