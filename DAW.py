@@ -30,13 +30,15 @@ class DAW:
         for task in tasks_list:    
             for input in task.require_input_from:   
                 if (".out_channel." in input):
+                    #print(input)
                     dependency_name = input.split(".out")[0]
+                    #print(dependency_name)
                     #modify dependency name so it is align instead of STAR_ALIGN
                     #XXXX
                     if(dependency_name in task_modules_name):
                         dependencies_dict[dependency_name].append(task.module_name)
                     else:
-                        raise Exception("error: " + dependency_name+ " is not declared in " + str(input)) 
+                        raise Exception("error: " + dependency_name + " is not declared in " + str(task_modules_name))# str(input)) 
         return dependencies_dict
 
     @staticmethod
@@ -108,7 +110,7 @@ class DAW:
         #self.rewrite(annotDB, input_description)
     
     def rewrite(self, annotationdb, input_description):
-        #new_daw = replace_tool(self, annotationdb, input_description, self.input)
+        new_daw = replace_tool(self, annotationdb, input_description, self.input)
         #for task in new_daw.tasks:
          #   print(task.name)
         new_daw = split(self, annotationdb, input_description)

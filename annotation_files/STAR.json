@@ -4,8 +4,9 @@
     "domain_specific_features": "splice_junctions",
     "is_splittable": "True",
     "mendatory_input_list": ["reads", "ref_genome"],
-    "output_list": "sam",
+    "output_list": ["sam", "log"],
     "module_path": "/path/star",
+    "module_name":"STAR_ALIGN",
 
     "resource_requirements_RAM": [
         {

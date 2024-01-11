@@ -6,6 +6,7 @@
     "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
     "output_list": ["quant_table"],
     "module_path": "/path/salmon",
+    "module_name":"SALMON_QUANT",
 
     "resource_requirements_RAM": [
         {

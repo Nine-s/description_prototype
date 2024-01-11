@@ -32,7 +32,7 @@ class Input:
         
         possible_strand_types = ["forward", "reverse", "unstranded"]
 
-        possible_ref_types = ["genome", "annotation", "others"]
+        possible_ref_types = ["genome", "annotation", "transcriptome", "others"]
         
 
         if (input_type=="sample"):
@@ -43,7 +43,7 @@ class Input:
 
         elif (input_type=="reference"):
             
-            if not (ref_type in possible_ref_types): raise Exception( 'The variable "strand" should be "genome", "annotation" or "others"')
+            if not (ref_type in possible_ref_types): raise Exception( 'The variable "ref_type" should be "genome", "annotation" or "others"')
             self.ref_type = ref_type
             strand = ""
         self.additional_columns = additional_columns 

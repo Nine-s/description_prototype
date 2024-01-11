@@ -234,6 +234,7 @@ class ToolAnnotation:
         #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
         self.module_path =  tool_description["module_path"]
+        self.module_name =  tool_description["module_name"]
         reference_sizes = []
         ram_used = []
         for resource_requirements in tool_description["resource_requirements_RAM"]:

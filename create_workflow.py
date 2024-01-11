@@ -18,18 +18,15 @@ for i in os.listdir(annotation_path):
         #print(full_path)
 annotDB = AnnotationDB(annotation_files)
 
-with open('/home/simon/GitHub/rnasplice-description/INFRA.json') as jsonfile:
+with open('/home/ninon/description_prototype/rnasplice-description/INFRA.json') as jsonfile:
     infra_description = json.load(jsonfile)
 
-with open('/home/simon/GitHub/rnasplice-description/DAW.json') as jsonfile:
+with open('/home/ninon/description_prototype/rnasplice-description/DAW.json') as jsonfile:
     daw_description = json.load(jsonfile)
 
 
-with open('/home/simon/GitHub/rnasplice-description/INPUT_EVAL.json') as jsonfile:
+with open('/home/ninon/description_prototype/rnasplice-description/INPUT_EVAL.json') as jsonfile:
     input_description = json.load(jsonfile)
-
-with open('/home/simon/GitHub/rnasplice-description/INFRA.json') as jsonfile:
-    infra_description = json.load(jsonfile)
 
 #define objects for infra + nodes
 my_infra = Infra(infra_description)
@@ -39,7 +36,7 @@ my_infra = Infra(infra_description)
 
 # define object for DAW + task + connection
 my_DAW = DAW(daw_description, input_description, my_infra, annotDB)
-#my_DAW = DAW.rewrite(annotDB)
+my_DAW = my_DAW.rewrite(annotationdb=annotDB, input_description=input_description)
 
 to_nextflow(my_DAW)
 #to_cwl(my_DAW)
